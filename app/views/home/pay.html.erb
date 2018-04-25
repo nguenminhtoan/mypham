@@ -1,0 +1,201 @@
+<% content_for(:title, "Thanh toán sản phẩm") %>
+<div class="col-lg-3">
+    <%if @categories.present?%>
+      <ul class="menu" >
+          <li class="header">DANH MỤC SẢN PHẨM</li>
+          <%@categories.each do |val|%>
+            <% if !val['link'].include?("news/") && !val['parent'].present? %>
+                <li><a href="<%= '/' << val['parent'] if val['parent'].present? %>/<%= val['link'] %>"><%= val['title'] %></a></li>
+                <% @categories.each do |row| %>
+                  <%  if row['parent'].present? && row['parent'].to_s == val['link'].to_s %>
+                <li><i class="glyphicon glyphicon-minus"></i><a href="/<%= row['parent']%>/<%= row['link'] %>"><%=row['title']%></a></li>
+                  <% end %>
+                <% end %>
+            <% end %>
+          <%end%>
+      </ul>
+    <%end%>
+
+    <%if @hot.present?%>
+      <ul class="menu" >
+          <li class="header">SẢN PHẨM BÁN CHẠY</li>
+          <li class="hot">
+              <%@hot.each do |val|%>
+                <a href="<%= "/" << val['parent_cat'] if val['parent_cat'].present? %><%= "/" << val['categories'] if val['categories'].present? %><%= "/"  << val['link'] %>"><image src="<%=val['image']%>"/></a>
+              <%end%>		
+          </li>
+      </ul>
+    <%end%>
+
+    <%if @categories.present?%>
+      <ul class="menu" >
+          <li class="header">Tin Tức</li>
+          <%@categories.each do |val|%>
+            <% if val['link'].include?("news") && !val['parent'].present? %>
+              <li><a href="<%= '/' << val['parent'] if val['parent'].present? %>/<%= val['link'] %>"><%= val['title'] %></a></li>
+              <% @categories.each do |row| %>
+                <%  if row['parent'].present? && row['parent'].to_s == val['link'].to_s %>
+              <li><i class="glyphicon glyphicon-minus"></i><a href="/<%= row['link'] %>"><%=row['title']%></a></li>
+                <% end %>
+              <% end %>
+            <% end %>
+          <%end%>
+      </ul>
+    <%end%>
+
+    <%if @news.present?%>
+      <ul class="news-hot">
+          <li class="header">Tin mới nhất</li>
+          <%@news.each do |val|%>
+            <li>
+                <a href="/<%= val['link_cate'] %>/<%= val['link'] %>">
+                    <img style="height:100px" src="<%= val['image'] %>"> 
+                    <div class="body" >
+                        <h4><%=val['title']%></h4></a>
+                    <p><%= raw  val['body'].scan(/.*>(.*)<\/\w>/).join %></p>
+                </div>
+            </li>
+          <%end%>
+      </ul>
+    <%end%>
+
+</div>
+
+
+<div class="col-lg-9">
+    <div class="little"><h2>Thanh Toán</h2></div>
+    <div class="product product-info">
+        <div class="header">Thông tin thanh toán</div>
+        <div class="form-group">
+            <label>Họ Tên</label>
+            <input name="name" class="form-control" value="<%= @customer['name'] %>" disabled />
+        </div>
+        <div class="form-group">
+            <label>Địa Chỉ Email</label>
+            <input name="name" class="form-control" name="email" value="<%= @customer['email'] %>" disabled />
+        </div>
+        <div class="form-group">
+            <label>Số ĐT</label>
+            <input name="name" class="form-control" name="phone"  value="<%= @customer['phone'] %>"  disabled />
+        </div>
+        <style>
+            .address{
+                    width: 49%;
+                    float: left;
+                    margin-right: 1%;
+            }
+            </style>
+        <div class="form-group">
+            <p style="margin-bottom: 0px; margin-top: 10px;"><label class="control-label">Tỉnh - Huyện</label></p>
+            <%= select_tag :id_province, options_for_select(@province.collect{ |u| [u['name'], u['id_province']] }, @customer['id_province']),:class=>'form-control address'%>
+            <%= select_tag :id_district, options_for_select(@district.collect{ |u| [u['name'], u['id_district']] }, @customer['id_district']),:class=>'form-control address'%>
+        </div>
+            
+        <div class="form-group">
+            <p style="margin-bottom: 0px; margin-top: 45px;"><label class="control-label">Xã - Ấp</label></p>
+            <%= select_tag :id_ward, options_for_select(@ward.collect{ |u| [u['name'], u['id_ward']] }, @customer['id_ward']),:class=>'form-control address'%>
+            <%= text_field_tag :id_address,{}, class: "form-control address", :value=>@customer['address'], placeholder: "Số nhà" %>
+        </div>
+            <br><br/>
+        <div class="form-group">
+            <label >Thanh Toán</label>
+            <% @payment.each do |val|%>
+            <li style="list-style: none; position: relative;">
+                <input type="radio" style="float: left; position: absolute; top: 15px;" name="payment" value="<%= val['id_payment'] %>" id="payment<%= val['id_payment'] %>" <%= "checked=checked" if val == @payment.first %> />
+                <label style="margin-left: 10px; font-weight: 100;" for="payment<%= val['id_payment'] %>" >
+                    <div style="float:left;"><img height="50px;" style="width:100px;margin-left: 10px; height: 75px;" src="<%= val['image'] %>"/></div>
+                    <p style="margin-left:120px;"><b><%= val['name'] %></b><br/><%= raw  val['card'] %></p>
+                </label>
+            </li>
+            <% end %>
+        </div>
+        
+    </div>
+    <div class="product product-info">
+        <div class="header">Thông tin đơn hàng</div>
+        <table class="table">
+            <thead>
+            <th width="55%">Sản Phẩm</th>
+            <th>SL</th>
+            <th style="text-align: center" width="40%">Tổng Cộng</th>
+            </thead>
+            <tbody>
+                <% @cart.each do |val| %>
+                <tr>
+                    <td><%= val['title'] %></td>
+                    <td align="center"><%= val['quantity'] %></td>
+                    <td align="right"><%= number_to_currency(val['price']*val['quantity'], :unit => 'đ', :precision => 0, :format => "%n %u") %></td>
+                </tr>
+                <% end %>
+                <% if @order.present? %>
+                <tr>
+                    <th colspan="2" >Khuyến mãi</th>
+                    <td align="right"><%= @order['percent'].to_s << "%" %></td>
+                </tr>
+                <% end %>
+                <tr>
+                    <th colspan="2" >Tổng Phụ</th>
+                    <% sum = @cart.map{|v| v['price']*v['quantity']}.sum  %>
+                    <td align="right"><%= number_to_currency(@order.present? ? sum-(sum*@order['percent']/100) : sum, :unit=>"đ",:precision=> 0, :format=>"%n %u") %></td>
+                </tr>
+                <tr>
+                    <th colspan="2">Giao Hàng</th>
+                    <td align="right"><%= number_to_currency(@shipment.first['price'], :unit=>"đ",:precision=> 0, :format=>"%n %u") %></td>
+                </tr>
+                <tr>
+                    <th colspan="2">Tổng Cộng</th>
+                    <td align="right"><%= number_to_currency((@order.present? ? sum-(sum*@order['percent']/100) : sum)+@shipment.first['price'], :unit=>"đ",:precision=> 0, :format=>"%n %u") %></td>
+                </tr>
+                <tr>
+                    <td colspan="3" style="padding-top: 20px">
+                        <%= select_tag(:id_shipment, options_for_select(@shipment.collect{|row| [row['name'],row['id_shipment'], data:{choose: row['messager'],price: row['price']}]}), :class => "choose") %>
+                       
+                        <button class="btn-lucky pull-right" id="add_order" style="padding: 2 5 3 5px" >Thanh Toán</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="reply-comment" style="margin-top:5px">
+            <%= @shipment.first['messager'] %>
+        </div>
+    </div>
+</div>
+
+
+<form id="order" action="add_order" method="POST">
+    <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+    <%= hidden_field_tag :province,{}, :name=>'order[province]', :value => ""  %>
+    <%= hidden_field_tag :district,{}, :name=>'order[district]', :value => ""  %>
+    <%= hidden_field_tag :ward,{}, :name=>'order[ward]', :value => ""  %>
+    <%= hidden_field_tag :address,{}, :name=>'order[address]', :value => ""  %>
+    <%= hidden_field_tag :payment,{}, :name=>'order[payment]', :value => ""  %>
+    <%= hidden_field_tag :shipment,{}, :name=>'order[shipment]', :value => ""  %>
+</form>
+
+<script>
+  $('#add_order').click(function(){
+    $("#province").val($("#id_province").find('option:selected').text());
+    $("#district").val($("#id_district").find('option:selected').text());
+    $("#ward").val($("#id_ward").find('option:selected').text());
+    $("#address").val($("#id_address").val());
+    $("#payment").val($("input:radio[name='payment']").val());
+    $("#shipment").val($("#id_shipment").val());
+    $("#order").submit();
+  });
+  
+  
+  $("#id_province").change(function(){
+      $.get( "/district/"+$("#id_province").val(), function(data) {
+          $("#id_district").html(data);
+          $.get( "/ward/"+$("#id_district").val(), function(data) {
+              $("#id_ward").html(data);
+          });
+      });
+  });
+  $("#id_district").change(function(){
+     $.get( "/ward/"+$("#id_district").val(), function(data) {
+          $("#id_ward").html(data);
+      });
+  });
+  
+</script>

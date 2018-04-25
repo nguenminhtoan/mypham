@@ -1,0 +1,63 @@
+
+<script>
+function DeleteRow() {
+    if(confirm('Bạn có muốn xóa không ?'))
+    {
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+}
+</script>
+
+
+<div class="box">
+    <header>
+        <div class="icons"><a href="/admin/product/new" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i>Thêm Mới</a></div>
+        <h5>Sản Phẩm</h5>
+    </header>
+
+    <div class="body">
+        <div class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+            <div class="row">
+                <div class="col-sm-12">
+                    <table id="dataTable" class="table table-bordered table-hover table-striped dataTable">
+                        <thead>
+                            <tr>
+                                <th width="5%">Mã</th>
+                                <th width="10%">Hình ảnh</th>
+                                <th width="20%">Tên sản phẩm</th>
+                                <th width="10%">Nhà cung cấp</th>
+                                <th width="10%">Giá bán</th>
+                                <th width="8%">Số lượng</th>
+                                <th width="15%">Danh mục</th>
+                                <th width="5%">Chọn</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table">
+                            <% @list.each do |row| %>
+                            <tr>
+                                <td align ="center"><%= row['id_product'] %></td>
+                                <td align="center"><img src="<%=row['image'] %>" height="70px"></td>
+                                <td><%= row['title'] %></td>
+                                <td><%= row['provider'] %></td>
+                                <td align="right"><%= number_to_currency(row['price'], :unit => 'VNĐ', :precision => 0, :format => "%n %u") %></td>
+                                <td align="center"><%= number_with_delimiter(row['quantily']) %></td>
+                                <td><%= row['categories'] %></td>
+                                <td align ="center">
+                                    <a href="/admin/product/edit/<%= row['id_product'] %>" class="text-success" ><i class="glyphicon glyphicon-pencil"></i></a>
+                                    <a href="/admin/product/delete/<%= row['id_product'] %>" class="text-danger" onclick="return DeleteRow();" ><i class="glyphicon glyphicon-trash"></i></a>
+                                </td>
+                            </tr>
+                            <% end %>
+                        </tbody>                
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

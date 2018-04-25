@@ -1,0 +1,62 @@
+
+
+<script>
+function DeleteRow() {
+    if(confirm('Bạn có muốn xóa không ?'))
+    {
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+}
+</script>
+
+
+<div class="box">
+    <header>
+        <div class="icons"><a href="/admin/banner/new" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i>Thêm Mới</a></div>
+        <h5>Banner</h5>
+    </header>
+
+    <div class="body">
+        <div class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+            <div class="row">
+                <div class="col-sm-12">
+                    <table id="dataTable" class="table table-bordered table-hover table-striped dataTable">
+                        <thead>
+                            <tr>
+                                <th width="3%">Mã</th>
+                                <th width="25%">Hình ảnh</th>
+                                <th width="20%">Đường đãn</th>
+                                <th width="20%">Tiêu đề</th>
+                                <th width="10%">Nội dung</th>
+                                <th width="7%">Sắp xếp</th>
+                                <th width="5%">Chọn</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table">
+                            <% @list.each do |row| %>
+                            <tr>
+                                <td align ="center"><%= row['id_banner'] %></td>
+                                <td align="center"><img src="<%=row['image'] %>" height="70px"></td>
+                                <td><%= row['link'] %></td>
+                                <td><%= row['title'] %></td>
+                                <td><%= row['name'] %></td>
+                                <td align="center"><%= row['sort_order'] %></td>
+                                <td align ="center">
+                                    <a href="/admin/banner/edit/<%= row['id_banner'] %>" class="text-success" ><i class="glyphicon glyphicon-pencil"></i></a>
+                                    <a href="/admin/banner/delete/<%= row['id_banner'] %>" class="text-danger" onclick="return DeleteRow();" ><i class="glyphicon glyphicon-trash"></i></a>
+                                </td>
+                            </tr>
+                            <% end %>
+                        </tbody>                
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

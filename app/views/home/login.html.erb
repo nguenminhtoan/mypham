@@ -1,0 +1,116 @@
+<% content_for(:title, "Đăng nhập tài khoản") %>
+<div class="col-lg-3">
+    <%if @categories.present?%>
+      <ul class="menu" >
+          <li class="header">DANH MỤC SẢN PHẨM</li>
+          <%@categories.each do |val|%>
+            <% if !val['link'].include?("news/") && !val['parent'].present? %>
+                <li><a href="<%= '/' << val['parent'] if val['parent'].present? %>/<%= val['link'] %>"><%= val['title'] %></a></li>
+                <% @categories.each do |row| %>
+                  <%  if row['parent'].present? && row['parent'].to_s == val['link'].to_s %>
+                <li><i class="glyphicon glyphicon-minus"></i><a href="/<%= row['parent']%>/<%= row['link'] %>"><%=row['title']%></a></li>
+                  <% end %>
+                <% end %>
+            <% end %>
+          <%end%>
+      </ul>
+    <%end%>
+</div>
+
+<div class="col-lg-9">
+    <div class="little"><h2>Tài Khoản</h2></div>
+    <%= form_for @account, url: {action: "auth"}, :html => {class: "product product-info"} do |f| %>
+        <div class="header">Đăng Nhập</div>
+        <ul class="message-error" >
+            <% @account.errors.full_messages.each do |message| %>
+              <% if message != " " %>
+                <%= raw("<li>"+ message +"</li>")%>
+              <% end %>
+            <% end %>
+        </ul>
+        <div class="form-group">
+            <%= f.label :username %>
+            <%= f.text_field :username, class: "form-control", placeholder: "Email" %>
+        </div>
+        <div class="form-group">
+            <%= f.label :password %>
+            <%= f.password_field :password, class: "form-control", placeholder: "Mật khẩu" %>
+        </div>
+        <div class="form-group" >
+            <input name="check" type="checkbox" /><span>&nbsp;&nbsp;Ghi nhớ</span>
+            <a href="" class="pull-right" >Quên Mật Khẩu</a>
+        </div>
+        <button class="btn-lucky" >Đăng Nhập</button>
+    <% end %>
+    <%= form_for @customer, url: {action: "sign"}, :html => {class: "product product-info"} do |f| %>
+        <div class="header">Đăng Ký</div>
+        <% if @customer.errors.any? %>
+          <ul class="message-error" >
+              <% @customer.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+          </ul>
+        <% end %>
+        <div class="form-group">
+          <%= f.label :name %>
+          <%= f.text_field :name, class: "form-control", placeholder: "Nguyễn Văn A" %>
+        </div>
+        <div class="form-group">
+            <%= f.label :sex %>
+            <%= f.select :sex, options_for_select([["Nam",1],["Nữ",2]], @customer.sex),{}, :class=>'form-control' %>
+        </div>
+        <div class="form-group">
+            <%= f.label :email %>
+            <%= f.text_field :email, class: "form-control", placeholder: "example@gmail.com" %>
+        </div>
+        <div class="form-group">
+          <%= f.label :phone%>
+          <%= f.text_field :phone, class: "form-control", placeholder: "09802920902", maxlength: "11", onkeypress: "return isNumberKey(event)" %>
+        </div>
+        <style>
+            .address{
+                    width: 49%;
+                    float: left;
+                    margin-right: 1%;
+            }
+            </style>
+        <div class="form-group">
+            <p style="margin-bottom: 0px; margin-top: 10px;"><label class="control-label">Tỉnh - Huyện</label></p>
+            <%= f.select :id_province, options_for_select(@province.collect{ |u| [u['name'], u['id_province']] }, @customer.id_province), {} ,:class=>'form-control address'%>
+            <%= f.select :id_district, options_for_select(@district.collect{ |u| [u['name'], u['id_district']] }, @customer.id_district), {} ,:class=>'form-control address'%>
+        </div>
+            
+        <div class="form-group">
+            <p style="margin-bottom: 0px; margin-top: 45px;"><label class="control-label">Xã - Ấp</label></p>
+            <%= f.select :id_ward, options_for_select(@ward.collect{ |u| [u['name'], u['id_ward']] }, @customer.id_ward), {} ,:class=>'form-control address'%>
+            <%= f.text_field :address, class: "form-control address", placeholder: "Số nhà" %>
+        </div>
+        <div class="form-group">
+            <%= f.label :password %>
+            <%= f.password_field :password, class: "form-control", placeholder: "Ít nhất 5 ký tự" %>
+        </div>
+        <div class="form-group">
+            <%= f.label :password_confirmation %>
+            <%= f.password_field :password_confirmation, class: "form-control", placeholder: "Ít nhất 5 ký tự" %>
+        </div>
+        <button class="btn-lucky" >Đăng Ký</button>
+    <% end %>
+</div>
+
+<script>
+  
+  $("#customer_id_province").change(function(){
+      $.get( "/district/"+$("#customer_id_province").val(), function(data) {
+          $("#customer_id_district").html(data);
+          $.get( "/ward/"+$("#customer_id_district").val(), function(data) {
+              $("#customer_id_ward").html(data);
+          });
+      });
+  });
+  $("#customer_id_district").change(function(){
+     $.get( "/ward/"+$("#customer_id_district").val(), function(data) {
+          $("#customer_id_ward").html(data);
+      });
+  });
+  
+</script>

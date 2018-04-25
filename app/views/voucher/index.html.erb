@@ -1,0 +1,67 @@
+
+
+<script>
+function DeleteRow() {
+    if(confirm('Bạn có muốn xóa không ?'))
+    {
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+}
+</script>
+
+
+<div class="box">
+    <header>
+        <div class="icons"><a href="/admin/voucher/new" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i>Thêm Mới</a></div>
+        <h5>Khuyến Mãi</h5>
+    </header>
+
+    <div class="body">
+        <div class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+            <div class="row">
+                <div class="col-sm-12">
+                    <table id="dataTable" class="table table-bordered table-hover table-striped dataTable">
+                        <thead>
+                            <tr>
+                                <th width="3%">Mã</th>
+                                <th width="8%">Hình ảnh</th>
+                                <th width="15%">Tên Khuyến mãi</th>
+                                <th width="5%">khuyến mãi</th>
+                                <th width="5%">Số lượng</th>
+                                <th width="20%">Code</th>
+                                <th width="10%">Mô tả</th>
+                                <th width="8%">Trạng thái</th>
+                                <th width="5%">Chọn</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table">
+                            <% @list.each do |row| %>
+                            <tr>
+                                <td align ="center"><%= row['id_voucher'] %></td>
+                                <td align="center"><img src="<%=row['image'] %>" height="70px"></td>
+                                <td><%= row['name'] %></td>
+                                <td align="center" ><%= row['percent'].to_s << "%"%></td>
+                                <td align="center" ><%= row['amount'] %></td>
+                                <td style="word-break: break-all;"><%= row['code'] %></td>
+                                <td><%= row['messager'] %></td>
+                                <td><%= row['status']== 2 ? "Công khai" : "Riêng tư" %></td>
+                                <td align ="center">
+                                    <a href="/admin/voucher/edit/<%= row['id_voucher'] %>" class="text-success" ><i class="glyphicon glyphicon-pencil"></i></a>
+                                    <a href="/admin/voucher/delete/<%= row['id_voucher'] %>" class="text-danger" onclick="return DeleteRow();" ><i class="glyphicon glyphicon-trash"></i></a>
+                                    <a href="" class="btn" style="border: solid 1px #4080ff; padding: 1px 5px; margin-top: 5px;" >In</a>
+                                </td>
+                            </tr>
+                            <% end %>
+                        </tbody>                
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

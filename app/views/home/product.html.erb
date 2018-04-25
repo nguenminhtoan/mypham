@@ -1,0 +1,93 @@
+<% content_for(:title, "#{@breadcrumb.first['title']}") %>
+<div class="col-lg-3">
+    <%if @categories.present?%>
+      <ul class="menu" >
+          <li class="header">DANH MỤC SẢN PHẨM</li>
+          <%@categories.each do |val|%>
+            <% if !val['link'].include?("news/") && !val['parent'].present? %>
+                <li><a href="<%= '/' << val['parent'] if val['parent'].present? %>/<%= val['link'] %>"><%= val['title'] %></a></li>
+                <% @categories.each do |row| %>
+                  <%  if row['parent'].present? && row['parent'].to_s == val['link'].to_s %>
+                <li><i class="glyphicon glyphicon-minus"></i><a href="/<%= row['parent']%>/<%= row['link'] %>"><%=row['title']%></a></li>
+                  <% end %>
+                <% end %>
+            <% end %>
+          <%end%>
+      </ul>
+    <%end%>
+    
+    <form class="rank-pire">
+        <strong style="font-size:20px">Lọc theo giá</strong>
+        <% if @search.present? %>
+          <input type="hidden" name="product" value="<%= @search %>" >
+        <% end %>
+        <div class="content-pire"><div class="pire" data-min="<%= @min.present? ? @min : "5000"%>" data-max="<%= @max.present? ? @max : "2380000"%> " data-rank="10000" data-valmin="0" ></div></div>
+        <button type="submit" class="btn-lucky loc" >Lọc</button>
+    </form>
+
+    <%if @hot.present?%>
+      <ul class="menu" >
+          <li class="header">SẢN PHẨM BÁN CHẠY</li>
+          <li class="hot">
+              <%@hot.each do |val|%>
+                <a href="<%= "/" << val['parent_cat'] if val['parent_cat'].present? %><%= "/" << val['categories'] if val['categories'].present? %><%= "/"  << val['link'] %>"><image src="<%=val['image']%>"/></a>
+              <%end%>		
+          </li>
+      </ul>
+    <%end%>
+
+    <%if @categories.present?%>
+      <ul class="menu" >
+          <li class="header">Tin Tức</li>
+          <%@categories.each do |val|%>
+            <% if val['link'].include?("news") && !val['parent'].present? %>
+              <li><a href="<%= '/' << val['parent'] if val['parent'].present? %>/<%= val['link'] %>"><%= val['title'] %></a></li>
+              <% @categories.each do |row| %>
+                <%  if row['parent'].present? && row['parent'].to_s == val['link'].to_s %>
+              <li><i class="glyphicon glyphicon-minus"></i><a href="/<%= row['link'] %>"><%=row['title']%></a></li>
+                <% end %>
+              <% end %>
+            <% end %>
+          <%end%>
+      </ul>
+    <%end%>
+
+    <%if @news.present?%>
+      <ul class="news-hot">
+          <li class="header">Tin mới nhất</li>
+          <%@news.each do |val|%>
+            <li>
+                <a href="/<%= val['link_cate'] %>/<%= val['link'] %>">
+                    <img style="height:100px" src="<%= val['image'] %>"> 
+                    <div class="body" >
+                        <h4><%=val['title']%></h4></a>
+                    <p><%= raw  val['body'].scan(/.*>(.*)<\/\w>/).join %></p>
+                </div>
+            </li>
+          <%end%>
+      </ul>
+    <%end%>
+
+</div>
+<div class="col-lg-9">
+    <% @product.each do |val|%>
+        <div class="items">
+                <div class="img" style="background-image: url('<%= val['image'] %>')"></div>
+                <p><%=val['title']%></p>
+                <div class="price">
+                        <div class="cost"><%= number_to_currency(val['price'], :unit => 'VNĐ', :precision => 0, :format => "%n %u")%></div>
+                        <div class="number">
+                                <button class="btn up"><i class="glyphicon glyphicon-plus"></i></button>
+                                <input  class="val" maxlength="2" min="1" name="soluong" onkeypress="return isNumberKey(event)" value="1" />
+                                <button class="btn down"><i class="glyphicon glyphicon-minus"></i></button>
+                        </div>
+                </div>
+                <div class="button"> 
+                        <a class="btn add" data-id="<%= val['id_product'] %>" >Thêm vào giỏ</a>
+                        <a class="btn detail" href="<%= "/" << val['parent_cat'] if val['parent_cat'].present? %><%= "/" << val['categories'] if val['categories'].present? %><%= "/"  << val['link'] %>" a>Chi tiết</a>
+                </div>
+        </div>
+    <% end %>
+
+</div>
+<%= hidden_field_tag :authenticity_token, form_authenticity_token %>

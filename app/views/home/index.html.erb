@@ -1,0 +1,67 @@
+<% content_for(:title, "Trang chủ") %>
+<div class="slider-index" >
+    <h3>Sản phẩm Mới Nhất </h3>
+<% @new.each do |val|%>
+    <div class="items">
+      <div class="img" style="background-image: url('<%=val['image']%>')"></div>
+      <p><%=val['title']%></p>
+      <div class="price">
+              <div class="cost"><%= number_to_currency(val['price'], :unit => 'VNĐ', :precision => 0, :format => "%n %u")%></div>
+              <div class="number">
+                      <button class="btn up"><i class="glyphicon glyphicon-plus"></i></button>
+                      <input  class="val" maxlength="2" min="1" name="soluong" onkeypress="return isNumberKey(event)" value="1" />
+                      <button class="btn down"><i class="glyphicon glyphicon-minus"></i></button>
+              </div>
+      </div>
+      <div class="button"> 
+              <a class="btn add" data-id="<%=val['id_product']%>" >Thêm vào giỏ</a>
+              <a class="btn detail" href="<%= "/" << val['parent_cat'] if val['parent_cat'].present? %><%= "/" << val['categories'] if val['categories'].present? %><%= "/"  << val['link'] %>" a>Chi tiết</a>
+      </div>
+    </div>
+<% end %>
+</div>
+
+<div class="slider-index" >
+    <h3>Sản phẩm Bán Chạy </h3>
+<% @hot.each do |val|%>
+    <div class="items">
+        <div class="img" style="background-image: url('<%=val['image']%>')"></div>
+        <p><%=val['title']%></p>
+        <div class="price">
+                <div class="cost"><%= number_to_currency(val['price'], :unit => 'VNĐ', :precision => 0, :format => "%n %u")%></div>
+                <div class="number">
+                        <button class="btn up"><i class="glyphicon glyphicon-plus"></i></button>
+                        <input  class="val" maxlength="2" min="1" name="soluong" onkeypress="return isNumberKey(event)" value="1" />
+                        <button class="btn down"><i class="glyphicon glyphicon-minus"></i></button>
+                </div>
+        </div>
+        <div class="button"> 
+            <a class="btn add" data-id="<%=val['id_product']%>" >Thêm vào giỏ</a>
+            <a class="btn detail" href="<%= "/" << val['parent_cat'] if val['parent_cat'].present? %><%= "/" << val['categories'] if val['categories'].present? %><%= "/"  << val['link'] %>" a>Chi tiết</a>
+        </div>
+    </div>
+<% end %>
+</div>
+
+<div class="slider-index" >
+    <h3>Sản phẩm Khuyến mãi </h3>
+<% @sale.each do |val|%>
+    <div class="items">
+        <div class="img" style="background-image: url('<%=val['image']%>')"></div>
+        <p><%=val['title']%></p>
+        <div class="price">
+                <div class="cost"><%= number_to_currency(val['price'], :unit => 'VNĐ', :precision => 0, :format => "%n %u")%></div>
+                <div class="number">
+                        <button class="btn up"><i class="glyphicon glyphicon-plus"></i></button>
+                        <input  class="val" maxlength="2" min="1" name="soluong" onkeypress="return isNumberKey(event)" value="1" />
+                        <button class="btn down"><i class="glyphicon glyphicon-minus"></i></button>
+                </div>
+        </div>
+        <div class="button"> 
+            <a class="btn add" data-id="<%=val['id_product']%>" >Thêm vào giỏ</a>
+            <a class="btn detail" href="<%= "/" << val['parent_cat'] if val['parent_cat'].present? %><%= "/" << val['categories'] if val['categories'].present? %><%= "/"  << val['link'] %>" a>Chi tiết</a>
+        </div>
+    </div>
+<% end %>
+    <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+</div>

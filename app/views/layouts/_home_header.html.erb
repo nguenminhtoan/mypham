@@ -1,0 +1,102 @@
+
+
+<div class="nav" >
+    <div class="logo">
+        <a href="/" ><span>K</span>OREAN FASHION</a>
+    </div>
+    <div class=" search">
+        <div class="introduce">
+            <i class="glyphicon glyphicon-map-marker"></i>&nbsp;Toàn quốc
+            <i class="glyphicon glyphicon-certificate"></i>&nbsp;Chất lượng
+            <i class="glyphicon glyphicon-piggy-bank"></i>&nbsp;Tiết kiệm
+        </div>
+        <div class="find" >
+            <form action="/search" method="get" >
+                <input class="s" name="product" placeholder="Sản phẩm cần tìm" />
+                <button >Tìm</button>
+            </form>
+            <div class="hotline">0123 456 789</div>
+            <div class="open">7:00 ~ 20:00</div>
+        </div>
+        <div class="info">
+            <div class="title" >
+                <div class="noidung">An toàn</div>
+            </div>
+            <div class="title" >
+                <div class="noidung">Chất lượng</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<% if  @banner.present? %>
+  <div id="myCarousel" class="carousel slide" data-ride="carousel"> 
+      <ol class="carousel-indicators">
+          <% @banner.each_with_index do |row, i| %>
+            <li data-target="#myCarousel" data-slide-to="<%= i %>" <%= 'class=active' if row == @banner.first %> ></li> 
+          <% end %>
+      </ol>
+      <div class="carousel-inner" style=" height:400px"> 
+          <% @banner.each do |row| %>
+            <div class="item <%= 'active' if row == @banner.first %>">
+                <a href="<%= row['link'] %>"><img src="<%= row['image'] %>" width="100%"></a>
+            </div>
+          <%end%>
+      </div>
+      <div>
+          <a class="left carousel-control" href="#myCarousel" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>
+          <a class="right carousel-control" href="#myCarousel" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span> </a> 
+      </div> 
+  </div>
+<% end %>
+
+<nav class="nav navbar navbar-inverse">
+    
+    
+    <% if  @categories.present? %>
+      <div class="navbar-collapse">
+          <ul class="nav navbar-nav">
+              <li><a href="/">Trang chủ</a></li>
+              <% @categories.each do |val| %>
+                <% if val['id_parent_categories'].nil? %>  
+                  <li>
+                      <% if @categories.select{ |v| v['id_parent_categories'] != '' && v['id_parent_categories'].to_s == val['id_categories'].to_s}.present?  %>
+                        <a href="/<%= val['link'] %>" class="dropdown-toggle"><%=val['title']%></a>
+                        <ul class="dropdown-menu">
+                            <% @categories.each do |row| %>
+                              <%  if row['id_parent_categories'].present? && row['id_parent_categories'].to_s == val['id_categories'].to_s %>
+                                <% if val['link'].include?('news/') %>
+                                <li><a href="/<%= row['link'] %>"><%=row['title']%></a></li>
+                                <% else %>
+                                <li><a href="/<%= val['link']%>/<%= row['link'] %>"><%=row['title']%></a></li>
+                                <% end %>
+                              <% end %>
+                            <% end %>
+                        </ul>
+                      <% else  %>
+                        <a href="/<%= val['link'] %>" ><%=val['title']%></a>
+                      <% end %>
+                  </li>
+                <% end %>
+              <% end %>
+              <li><a href="/news/tin-tuc/gioihieu">Giới Thiệu</a></li>
+              <li><a href="/news/tin-tuc/help">Liên Hệ</a></li>
+          </ul>  
+      </div>
+    <% end %>
+    
+</nav>
+
+<% if @breadcrumb.present? %>
+<ul class="tree">
+    <li class="root" ><a href="/">HOME</a></li>
+    <% link = '' %>
+  <% @breadcrumb.each do |row| %>
+    <% if row == @breadcrumb.last %>
+      <li> > <%= row['title'] %></li>
+    <% else %>
+      <li> > <a href="<%= link << '/' << row['link'] %>"><%= row['title'] %></a></li>
+    <% end %>
+  <% end %>
+</ul>
+<% end %>

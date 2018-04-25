@@ -1,0 +1,120 @@
+
+
+<script>
+function DeleteRow(name) {
+    $(name).closest('tr').remove();
+}
+
+
+function AddRow(name){
+  bool = true;
+  id_status = $(name).closest('tr').find('td:first').find('input').val();
+  title = $(name).closest('tr').find('td').eq(1).find('input').val();
+  text = $(name).closest('tr').find('td').eq(2).find('input').val();
+  html = '<tr>\n\
+              <input name="statusArr[][id_status]" type="hidden" value= "'+ id_status +'" />\n\
+              <td align="center">'+ id_status +'</td>\n\
+              <td><input name="statusArr[][name]" class="form-control" value="'+ title +'" /></td>\n\
+              <td align="center"><input type="text" statusArr[][text] value="'+ text +'"></td>\n\
+              <td>\n\
+                <a onclick="DeleteRow(this);" class="btn btn-danger">\n\
+                  <i class="glyphicon glyphicon-remove"></i>\n\
+                </a>\n\
+              </td>\n\
+            </tr>';
+    if (id_status != ''){
+      for( i=0; i < $("#table tr").length - 1; i++){
+        if ( id_status == $("#table tr").eq(i).find('td:first').text()){
+          $(name).closest('tr').find('td:first').find('input').val("");
+          $(name).closest('tr').find('td:first').find('input').attr('placeholder','Mã đã có');
+          bool = false;
+          break;
+        }
+        else
+        {
+          bool = true;
+        }
+      }
+      if (bool){
+        if (title != '')
+        {
+          $(name).closest('tr').before(html);
+          $(name).closest('tr').find('td:first').find('input').val("");
+          $(name).closest('tr').find('td').eq(1).find('input').val("");
+          $(name).closest('tr').find('td').eq(2).find('input').val("");
+          $(name).closest('tr').find('td').eq(1).find('input').css({'border':'#aaa solid 1px'});
+          $(name).closest('tr').find('td').eq(1).find('input').attr('placeholder','');
+        }
+        else{
+          $(name).closest('tr').find('td').eq(1).find('input').css({'border':'red solid 1px'});
+          $(name).closest('tr').find('td').eq(1).find('input').attr('placeholder','nhập giá trị');
+        }
+        $(name).closest('tr').find('td:first').find('input').css({'border':'#aaa solid 1px'});
+        $(name).closest('tr').find('td:first').find('input').attr('placeholder','');
+      }
+    }
+    else
+    {
+      $(name).closest('tr').find('td:first').find('input').css({'border':'red solid 1px'});
+      $(name).closest('tr').find('td:first').find('input').attr('placeholder','nhập GT');
+    }
+}
+</script>
+
+
+<div class="box">
+    <header>
+        <div class="icons"><a href="/admin/status" class="btn btn-primary"><i class="glyphicon glyphicon-chevron-left"></i>Trở lại</a></div>
+        <h5>Trạng Thái</h5>
+    </header>
+
+    <div class="body">
+        <%= form_for(@new, :url=>{:action=>'save'}) do |f| %>
+        <div class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+            
+            <div class="row">
+                <div class="col-sm-3"></div>
+                <div class="col-sm-6">
+                    <table class="table table-bordered table-hover table-striped dataTable">
+                        <thead>
+                            <tr>
+                                <th width="20%">Mã</th>
+                                <th width="30%">Trạng Thái</th>
+                                <th width="10%">Mô Tả</th>
+                                <th width="10%">Chọn</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table">
+                            <% @list.each do |row| %>
+                            <tr>
+                                <td align="center"><input name="statusArr[][id_status]" value="<%= row['id_status'] %>" type="hidden"/><%= row['id_status'] %></td>
+                                <td><input name="statusArr[][name]" value="<%= row['name'] %>"  class="form-control"/></td>
+                                <td> <input type="text" size="30px" name="statusArr[][text]" value="<%= row['text'] %>"></td>
+                                <td align="center"><a href="javacript:void(0);" class="text-danger"></td>
+                            </tr>
+                            <% end %>
+                            <tr>
+                                <td align="center"><%= f.text_field :id_status, :size =>"5px" %></td>
+                                <td><%= f.text_field :name, :class=>"form-control"%></td>
+                                <td align="center"><%= f.text_field :text, :size => "30px"%></td>
+                                <td align="center"><a href="javacript:void(0);" onclick="AddRow(this);" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i></td>
+                            </tr>
+                        </tbody>                
+                    </table>
+                </div>
+                <div class="col-sm-3"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group">
+                <div class="col-lg-6">
+                    <button name="huy" class="btn btn-danger pull-right"><i class="glyphicon glyphicon-remove"></i>Hủy Bỏ</button>
+                </div>
+                <div class="col-lg-3">
+                    <button type="submit" class="btn btn-success"><i class="glyphicon glyphicon-ok"></i>Lưu Lại</button>
+                </div>
+            </div>
+        </div>
+        <% end %>
+    </div>
+</div>

@@ -1,0 +1,99 @@
+<div class="box">
+    <header class="dark">
+        <div class="icons" style="padding:3px">
+            <a href="/admin/provider" class="btn btn-primary"><i class="glyphicon glyphicon-chevron-left"></i>Trở Lại</a>
+        </div>
+        <h5>Thêm Nhà Cung Cấp</h5>
+    </header>
+    <div class="body">
+        <%= form_for(@new, :url=>{:action=>'save'},:html=>{:class=>"form-horizontal"}) do |f| %>
+            <div class="form-group">
+                <%= f.label :image, :class=>"control-label col-lg-4"%>
+                
+                <div class="col-lg-8">
+                    <div class="fileinput fileinput-new" data-provides="fileinput">
+                        <div class="fileinput-preview thumbnail"  style="width: 200px; height: 150px;"></div>
+                        <input name="link" type="hidden" />
+                        <div>
+                            <span class="btn btn-default btn-file">
+                                <%= f.file_field :image , :class=>"img"%>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <%= f.label :logo, :class=>'control-label col-lg-4' %>
+                <div class="col-lg-4">
+                        <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                        <%= f.text_field :logo, :class=>'form-control', :placeholder=>"Dường đẫn danh mục" %>
+                    </div>
+                </div>
+                <span class="error right"><%=@new.errors[:logo].first%></span>
+            </div>
+            <div class="form-group">
+                <%= f.label :link, :class=>'control-label col-lg-4' %>
+                <div class="col-lg-4">
+                        <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                        <%= f.text_field :link, :class=>'form-control', :placeholder=>"Dường đẫn danh mục" %>
+                    </div>
+                </div>
+                <span class="error right"><%=@new.errors[:link].first%></span>
+            </div>
+            <div class="form-group">
+                <%= f.label :title, :class=>'control-label col-lg-4' %>
+                <div class="col-lg-4">
+                        <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                        <%= f.text_field :title, :class=>'form-control', :placeholder=>"Tiêu đề của danh mục" %>
+                    </div>
+                </div>
+                <span class="error right"><%=@new.errors[:title].first%></span>
+            </div>
+            
+            <div class="form-group">
+                <%= f.label :name, :class=>'control-label col-lg-4' %>
+                <div class="col-lg-4">
+                        <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                        <%= f.text_field :name, :class=>'form-control', :placeholder=>"Tên của loại danh mục" %>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <%= f.label :sort_order, :class=>'control-label col-lg-4' %>
+                <div class="col-lg-4">
+                        <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                        <%= f.number_field :sort_order, :class=>'form-control', :placeholder=>"mức độ ưu tiên" %>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="form-group">
+                <div class="col-lg-6">
+                    <button name="huy" class="btn btn-danger pull-right"><i class="glyphicon glyphicon-remove"></i>Hủy Bỏ</button>
+                </div>
+                <div class="col-lg-3">
+                    <button type="submit" class="btn btn-success"><i class="glyphicon glyphicon-ok"></i>Lưu Lại</button>
+                </div>
+            </div>
+        <% end %> 
+    </div>
+</div>
+    <script>
+        $(".fileinput-exists").click(function(){
+            $('.img').val('');
+            $(".fileinput-preview.thumbnail").html('');
+        });
+        $(".img").change(function(event) {
+            var files = this.files;
+            var img = new Image;
+            img.src = window.URL.createObjectURL(files[0]);
+            $(".fileinput-preview.thumbnail").html(img);
+        });
+    </script>
+

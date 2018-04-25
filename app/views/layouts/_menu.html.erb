@@ -1,0 +1,127 @@
+<div id="left">
+    <div class="media user-media bg-dark dker">
+        <div class="user-media-toggleHover">
+            <span class="glyphicon glyphicon-user"></span>
+        </div>
+        <div class="user-wrapper bg-dark">
+            <a class="user-link" href="">
+                <img class="media-object img-thumbnail user-img" alt="User Picture" src="<%= @info.first['image'] %>">
+                <span class="label label-danger user-label"></span>
+            </a>
+
+            <div class="media-body">
+                <h5 class="media-heading"><%= @info.first['groups'] %></h5>
+                <ul class="list-unstyled user-info">
+                    <li><a href="javascript:void(0);"><%= @info.first['name'] %></a></li>
+                    <li>Truy cập lần cuối : <br>
+                        <small><i class="glyphicon glyphicon-calendar"></i>&nbsp;<%= session[:date_login] %></small>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <ul id="menu" class="bg-dark dker">
+        <li class="nav-header">Menu</li>
+        <li class="nav-divider"></li>
+        <li>
+            <a href="/admin/dashboard">
+                <i class="glyphicon glyphicon-dashboard"></i><span class="link-title">&nbsp;Thống Kê</span>
+            </a>
+        </li>
+        <li>
+            <a href="/admin/customer">
+                <i class="glyphicon glyphicon-user"></i>
+                <span class="link-title">Người Dùng</span>
+            </a>
+        </li>
+        <li>
+            <a href="javascript:void(0);">
+                <i class="fa fa-navicon"></i>
+                <span class="link-title">Danh Mục</span>
+                <span class=" pull-right" style="padding-right:15px"><i class="glyphicon glyphicon-chevron-down"></i></span>
+            </a>
+            <ul class="collapse">
+                <li>
+                    <a href="/admin/categories">
+                        <i class="glyphicon glyphicon-pencil"></i>&nbsp;Danh Mục Sản Phẩm</a>
+                </li>
+                <li>
+                    <a href="/admin/payment">
+                        <i class="glyphicon glyphicon-pencil"></i>&nbsp;Thanh Toán</a>
+                </li>
+                <li>
+                    <a href="/admin/shipment">
+                        <i class="glyphicon glyphicon-pencil"></i>&nbsp;Vận Chuyển</a>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a href="javascript:void(0);">
+                <i class="fa fa-product-hunt"></i>
+                <span class="link-title">Sản Phẩm</span>
+                <span class=" pull-right" style="padding-right:15px"><i class="glyphicon glyphicon-chevron-down"></i></span>
+            </a>
+            <ul>
+                <li>
+                    <a href="/admin/product">
+                        <i class="glyphicon glyphicon-pencil"></i>&nbsp;Sản Phẩm</a>
+                </li>
+                <li>
+                    <a href="/admin/attribute">
+                        <i class="glyphicon glyphicon-pencil"></i>&nbsp;Thuộc Tính Sản Phẩm</a>
+                </li>
+            </ul> 
+        </li>
+        <li>
+            <a href="javascript:void(0);">
+                <i class="glyphicon glyphicon-usd"></i>
+                <span class="link-title">Đơn Đặt Hàng</span>
+                <span class=" pull-right" style="padding-right:15px"><i class="glyphicon glyphicon-chevron-down"></i></span>
+            </a>
+            <ul>
+                <li>
+                    <a href="/admin/order">
+                        <i class="glyphicon glyphicon-pencil"></i>&nbsp;Bán Hàng</a>
+                </li>
+                <li>
+                    <a href="/admin/status">
+                        <i class="glyphicon glyphicon-pencil"></i>&nbsp;Trạng Thái Đơn Hàng</a>
+                </li>
+            </ul> 
+        </li>
+        <li>
+            <a href="/admin/news">
+                <i class="fa fa-newspaper-o"></i>
+                <span class="link-title">Tin Tức</span>
+            </a>
+        </li>
+        <li>
+            <a href="/admin/banner">
+                <i class="glyphicon glyphicon-earphone"></i>
+                <span class="link-title">Banner</span>
+            </a>
+        </li>
+        <li>
+            <a href="/admin/voucher">
+                <i class="fa fa-gift"></i>
+                <span class="link-title">Khuyến Mãi</span>
+            </a>
+        </li>
+        <li>
+            <a href="/admin/provider">
+                <i class="fa fa-gears"></i>
+                <span class="link-title">Nhà Cung Cấp</span>
+            </a>
+        </li>
+        
+        <li class="nav-divider">
+
+        </li>
+        <li>
+            <a href="/admin/login/logout">
+                <i class="glyphicon glyphicon-log-in"></i>
+                <span class="link-title">Đăng Xuất</span>
+            </a>
+        </li>
+    </ul>
+</div>

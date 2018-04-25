@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= yield(:title) %> </title>
+    <%= csrf_meta_tags %>
+    <link rel="icon" href="/images/icon.jpg" type="image/x-icon">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="/javascripts/jquery.elevateZoom-3.0.8.min.js" ></script>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  </head>
+
+  <body>
+    
+    <header>
+        <% if @profile.present?  %>
+          <div class="cart">
+            <a href="/logout" ><i class="glyphicon glyphicon-log-in"></i>&nbsp; Đăng Xuất</a>
+          </div>
+          <div class="cart">
+              <div id="cartquantity"><%= @numbercart %></div>
+              <a href="/cart" ><i class="glyphicon glyphicon-shopping-cart"></i>&nbsp; Giỏ hàng</a>
+          </div>
+          <div class="account">
+              <a href="/account" ><i class="glyphicon glyphicon-user"></i>&nbsp; <%= @profile.name %></a>
+          </div>
+        <% else %>
+          <div class="account">
+              <a href="/login" ><i class="glyphicon glyphicon-log-in"></i>&nbsp; Đăng Nhập</a>
+          </div>
+	<% end %>
+    </header>
+      <div class="container">
+    <%= render 'layouts/home_header' %>
+    <%= yield %>
+    <%= render 'layouts/home_footer' %>
+          </div>
+      
+	<footer>
+		Copyright 2017 by Minh Toan
+	</footer>
+  </body>
+    <script src="/stylesheets/jquery.js" ></script>
+</html>

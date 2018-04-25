@@ -1,0 +1,27 @@
+<div class="form-signin">
+    <div class="text-center">
+        <h2 class="text-primary">ĐĂNG NHẬP</h2>
+    </div>
+    <hr>
+    <div class="tab-content">
+        <div id="" class="tab-pane active">
+            <% if @account.errors.any? %>
+              <ul class="errors">
+              <% @account.errors.full_messages.each do |message| %>
+                  <% if message != " " %>
+                    <%= raw("<li>"+ message +"</li>")%>
+                  <% end %>
+              <% end %>
+              </ul>
+            <% end %>
+            <%= form_for(@account, :url=>{:action=>'auth'}, :class =>"text-muted text-center" ) do |f|%>
+              <p class="text-muted text-center">
+                  Nhập mật tài khoản và mật khẩu
+              </p>
+              <%= f.text_field :username, :class=>ErrFieldClass(@account.errors[:username].any?, "form-control"), :placeholder=>"Tài khoản" %>
+              <%= f.password_field :password, :class=>ErrFieldClass(@account.errors[:password].any?, "form-control"), :placeholder=>"Mật khẩu"%>
+              <input type="submit" class="btn btn-lg btn-primary btn-block" value="Đăng Nhập">
+            <% end %>
+        </div>
+    </div>
+</div>

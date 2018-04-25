@@ -1,0 +1,162 @@
+<div class="box">
+    <header class="dark">
+        <div class="icons"><a href="/admin/customer" class="btn btn-primary"><i class="glyphicon glyphicon-chevron-left"></i>Trở Lại</a></div>
+        <h5>Thêm Người Dùng</h5>
+    </header>
+    <div class="body">
+        
+        <%= form_for(@new, :url=>{:action=>'update'}, :html => {:class=>'form-horizontal'}) do |f| %>
+            <%= f.hidden_field :id_customer %>
+            <div class="form-group">
+                <%= f.label :email, :class=>"control-label col-lg-4"%>
+                <div class="col-lg-4">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        <%= f.text_field :email, :class=>ErrFieldClass(@new.errors[:email].any?, "form-control"), :placeholder=>"Nguyenvana@gmail.com" %>
+                    </div>
+                </div>
+                <span class="error right"><%=@new.errors[:email].first%></span>
+            </div>
+            
+            <div class="form-group">
+                <%= f.label :name, :class=>"control-label col-lg-4"%>
+                <div class="col-lg-4">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        <%= f.text_field :name, :class=>ErrFieldClass(@new.errors[:name].any?, "form-control"), :placeholder=>"Nguyễn Văn A" %>
+                    </div>
+                </div>
+                <span class="error right"><%=@new.errors[:name].first%></span>
+            </div>
+        
+        
+            <div class="form-group">
+                <%= f.label :image, :class=>"control-label col-lg-4"%>
+                
+                <div class="col-lg-8">
+                    <div class="fileinput fileinput-new" data-provides="fileinput">
+                        <div class="fileinput-preview thumbnail"  style="width: 200px; height: 150px;"></div>
+                        <%= f.hidden_field :link%>
+                        <div>
+                            <span class="btn btn-default btn-file">
+                                <%= f.file_field :image%>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="form-group">
+                <%= f.label :sex, :class=>"control-label col-lg-4"%>
+                <div class="col-lg-4">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        <%= f.select :sex, options_for_select([["Nam",1],["Nữ",2]], @new.sex),{}, :class=>'form-control' %>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="form-group">
+                <%= f.label :phone, :class=>"control-label col-lg-4"%>
+                <div class="col-lg-4">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        <%= f.number_field :phone, :class=>ErrFieldClass(@new.errors[:phone].any?, "form-control"), :placeholder=>"098-141-777" %>
+                    </div>
+                </div>
+                <span class="error right"><%=@new.errors[:phone].first%></span>
+            </div>
+        
+            <div class="form-group">
+                <%= f.label :id_group, :class=>"control-label col-lg-4"%>
+                <div class="col-lg-4">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        <%= f.select :id_group , options_for_select(@groups.collect{ |u| [u['name'], u['id_group']] }, @new.id_group), {} , :class=>"form-control" %>
+                    </div>
+                </div>
+                <span class="error right"><%=@new.errors[:id_grounp].first%></span>
+            </div>
+        
+            <div class="form-group">
+                <%= f.label :id_province, :class=>"control-label col-lg-4"%>
+                <div class="col-lg-4">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        <%= f.select :id_province, options_for_select(@province.collect{ |u| [u['name'], u['id_province']] }, @new.id_province), {} ,:class=>'form-control'%>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="form-group">
+                <%= f.label :id_district, :class=>"control-label col-lg-4"%>
+                <div class="col-lg-4">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        <%= f.select :id_district, options_for_select(@district.collect{ |u| [u['name'], u['id_district']] }, @new.id_district), {} ,:class=>'form-control'%>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="form-group">
+                <%= f.label :id_ward, :class=>"control-label col-lg-4"%>
+                <div class="col-lg-4">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        <%= f.select :id_ward, options_for_select(@ward.collect{ |u| [u['name'], u['id_ward']] }, @new.id_ward), {} ,:class=>'form-control'%>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="form-group">
+                <%= f.label :address, :class=>"control-label col-lg-4"%>
+                <div class="col-lg-4">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        <%= f.text_field :address, :class=>'form-control', :placeholder=>"Số nhà/ đường" %>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="form-group">
+                <div class="col-lg-6">
+                    <button name="huy" class="btn btn-danger pull-right"><i class="glyphicon glyphicon-remove"></i>Hủy Bỏ</button>
+                </div>
+                <div class="col-lg-3">
+                    <button type="submit" class="btn btn-success"><i class="glyphicon glyphicon-ok"></i>Lưu Lại</button>
+                </div>
+            </div>
+        <%end%>
+    </div>
+</div>
+<script>
+  if( $("#customer_link").val() != ''){
+    $(".fileinput-preview.thumbnail").html('<img src="'+$("#customer_link").val()+'"/>');
+  }
+  $("#customer_image").change(function(event) {
+        var files = this.files;
+        var img = new Image;
+        img.src = window.URL.createObjectURL(files[0]);
+        $("#customer_link").val(img.src);
+        $(".fileinput-preview.thumbnail").html(img);
+  });
+  $("#customer_id_province").change(function(){
+        $.get( "/admin/customer/district/"+$("#customer_id_province").val(), function(data) {
+            $("#customer_id_district").html(data);
+            $.get( "/admin/customer/ward/"+$("#customer_id_district").val(), function(data) {
+                $("#customer_id_ward").html(data);
+            });
+        });
+    });
+    $("#customer_id_district").change(function(){
+       $.get( "/admin/customer/ward/"+$("#customer_id_district").val(), function(data) {
+            $("#customer_id_ward").html(data);
+        });
+    });
+    
+    
+  $("#customer_id_group").onblur(function(){
+    $("#customer_id_group").before('<div>' + $("#customer_id_group").val() +'</div>');
+  });
+    
+</script>

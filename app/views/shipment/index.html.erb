@@ -1,0 +1,58 @@
+
+
+<script>
+function DeleteRow() {
+    if(confirm('Bạn có muốn xóa không ?'))
+    {
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+}
+</script>
+
+
+<div class="box">
+    <header>
+        <div class="icons"><a href="/admin/shipment/new" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i>Thêm Mới</a></div>
+        <h5>Vận Chuyển</h5>
+    </header>
+
+    <div class="body">
+        <div class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+            <div class="row">
+                <div class="col-sm-12">
+                    <table class="table table-bordered table-hover table-striped dataTable">
+                        <thead>
+                            <tr>
+                                <th width="3%">Mã</th>
+                                <th width="20%">Tên</th>
+                                <th width="20%">Giá</th>
+                                <th width="20%">Mô tả</th>
+                                <th width="5%">Chọn</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table">
+                            <% @list.each do |row| %>
+                            <tr>
+                                <td align ="center"><%= row['id_shipment'] %></td>
+                                <td><%= row['name'] %></td>
+                                <td align="right"><%= number_to_currency(row['price'], :unit => 'VNĐ', :precision => 0, :format => "%n %u") %></td>
+                                <td><%= row['messager'] %></td>
+                                <td align ="center">
+                                    <a href="/admin/shipment/edit/<%= row['id_shipment'] %>" class="text-success" ><i class="glyphicon glyphicon-pencil"></i></a>
+                                    <a href="/admin/shipment/delete/<%= row['id_shipment'] %>" class="text-danger" onclick="return DeleteRow();" ><i class="glyphicon glyphicon-trash"></i></a>
+                                </td>
+                            </tr>
+                            <% end %>
+                        </tbody>                
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

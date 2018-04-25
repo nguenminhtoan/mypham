@@ -1,0 +1,73 @@
+
+<script>
+function DeleteRow() {
+    if(confirm('Bạn có muốn xóa không ?'))
+    {
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+}
+</script>
+
+
+<div class="box">
+    <header>
+        <div class="icons"><a href="/admin/customer/new" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i>Thêm Mới</a></div>
+        <h5>Danh Mục Khách Hàng</h5>
+    </header>
+
+    <div class="body">
+        <div class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+            <div class="row">
+                <div class="col-sm-12">
+                    <table id="dataTable" class="table table-bordered table-hover table-striped dataTable">
+                        <thead>
+                            <tr>
+                                <th width="4%">Mã</th>
+                                <th width="15%">Tên người dùng</th>
+                                <th width="8%">Giới tính</th>
+                                <th width="10%">Số ĐT</th>
+                                <th width="10%">E-Mail</th>
+                                <th width="20%">Địa Chỉ</th>
+                                <th width="8%">Nhóm</th>
+                                <th width="5%">Chọn</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table">
+                            <% @list.each do |val| %>
+                              <tr>
+                                  <td align="center"><%=val['id_customer']%></td>
+                                  <td><%=val['name']%></td>
+                                  <td>
+                                      <% if  val['sex'] == 1 %>
+                                          Nam
+                                      <% else %>
+                                          Nữ
+                                      <% end %>
+                                  </td>
+                                  <td><%=val['phone']%></td>
+                                  <td><%=val['email']%></td>
+                                  <td>
+                                      <%=val['address']%><%= ', ' if val['address'].present? %>
+                                      <%= val['ward'] %>, <%=val['district']%>, <%=val['province']%>
+                                  </td>
+                                  <td><%=val['groups'] %></td>
+                                  <td align="center">
+                                      <a href="/admin/customer/edit/<%=val['id_customer']%>" class="text-success"><i class="glyphicon glyphicon-pencil"></i></a>
+                                      <a href="/admin/customer/delete/<%=val['id_customer']%>" onclick="return DeleteRow();" class="text-danger"><i class="glyphicon glyphicon-trash"></i></a>
+                                  </td>
+                              </tr>
+                            <%end%>
+
+                        </tbody>                
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

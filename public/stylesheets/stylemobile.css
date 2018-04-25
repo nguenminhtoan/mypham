@@ -1,0 +1,16 @@
+@media only screen and (max-width: 768px) {
+	
+	
+	.menu{
+		position: absolute;
+		top: 0px;
+		right: 0px;
+		display: none;
+		
+	}
+	
+	footer ul{
+		width: 100%;
+	}
+	
+}

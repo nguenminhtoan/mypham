@@ -1,0 +1,74 @@
+<script>
+function DeleteRow() {
+    if(confirm('Bạn có muốn xóa không ?'))
+    {
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+}
+</script>
+<div class="box">
+    <header>
+        <div class="icons"><a href="/admin/categories/new" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i>Thêm Mới</a></div>
+        <h5>Danh Mục</h5>
+    </header>
+
+    <div class="body">
+        <div class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+            <div class="row">
+                <div class="col-sm-12">
+                    <table class="table table-bordered table-hover table-striped dataTable">
+                        <thead>
+                            <tr>
+                                <th width="4%">Mã</th>
+                                <th width="5%">icon</th>
+                                <th width="25%">Tiêu đề</th>
+                                <th width="25%">Link</th>
+                                <th width="20%">Tên danh mục</th>
+                                <th width="10%">Sắp xếp</th>
+                                <th width="5%">Chọn</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table">
+                            <% @list.each do |val| %>
+                              <% if val['id_parent_categories'].nil? %>
+                                <tr>
+                                    <td align="center"><%=val['id_categories']%></td>
+                                    <td align="center"><i class="<%=val['image']%>"></i></td>
+                                    <td><%=val['title']%></td>
+                                    <td><%=val['link']%></td>
+                                    <td><%=val['name']%></td>
+                                    <td align="center"><%=val['sort_order']%></td>
+                                    <td align="center">
+                                        <a href="/admin/categories/edit/<%=val['id_categories']%>" class="text-success"><i class="glyphicon glyphicon-pencil"></i></a>
+                                        <a href="/admin/categories/delete/<%=val['id_categories']%>" onclick="return DeleteRow();" class="text-danger"><i class="glyphicon glyphicon-trash"></i></a>
+                                    </td>
+                                </tr>
+                                <% @list.each do |row| %>
+                                  <% if row['id_parent_categories'].present? && row['id_parent_categories'].to_s == val['id_categories'].to_s %>
+                                    <tr>
+                                        <td align="center"><%=row['id_categories']%></td>
+                                        <td align="center"><i class="<%= row['image']%>"></i></td>
+                                        <td>--- <%=row['title']%></td>
+                                        <td><%=val['link']%>/<%=row['link']%></td>
+                                        <td><%=row['name']%></td>
+                                        <td align="center"><%=row['sort_order']%></td>
+                                        <td align="center">
+                                            <a href="/admin/categories/edit/<%=row['id_categories']%>" class="text-success"><i class="glyphicon glyphicon-pencil"></i></a>
+                                            <a href="/admin/categories/delete/<%=row['id_categories']%>" onclick="return DeleteRow();" class="text-danger"><i class="glyphicon glyphicon-trash"></i></a>
+                                        </td>
+                                    </tr>
+                                  <% end %>
+                                <% end %>
+                              <% end %>
+                            <%end%>
+                        </tbody>                
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,303 @@
+<% content_for(:title, "Thông tin tài khoản") %>
+<script src="/tinymce/tinymce.min.js"></script>
+<script>tinymce.init({ selector:'textarea' });</script>
+<div class="col-lg-3">
+    <%if @categories.present?%>
+      <ul class="menu" >
+          <li class="header">DANH MỤC SẢN PHẨM</li>
+          <%@categories.each do |val|%>
+            <% if !val['link'].include?("news/") && !val['parent'].present? %>
+                <li><a href="<%= '/' << val['parent'] if val['parent'].present? %>/<%= val['link'] %>"><%= val['title'] %></a></li>
+                <% @categories.each do |row| %>
+                  <%  if row['parent'].present? && row['parent'].to_s == val['link'].to_s %>
+                <li><i class="glyphicon glyphicon-minus"></i><a href="/<%= row['parent']%>/<%= row['link'] %>"><%=row['title']%></a></li>
+                  <% end %>
+                <% end %>
+            <% end %>
+          <%end%>
+      </ul>
+    <%end%>
+
+    <%if @hot.present?%>
+      <ul class="menu" >
+          <li class="header">SẢN PHẨM BÁN CHẠY</li>
+          <li class="hot">
+              <%@hot.each do |val|%>
+                <a href="<%= "/" << val['parent_cat'] if val['parent_cat'].present? %><%= "/" << val['categories'] if val['categories'].present? %><%= "/"  << val['link'] %>"><image src="<%=val['image']%>"/></a>
+              <%end%>		
+          </li>
+      </ul>
+    <%end%>
+    
+    <%if @categories.present?%>
+      <ul class="menu" >
+          <li class="header">Tin Tức</li>
+          <%@categories.each do |val|%>
+            <% if val['link'].include?("news") && !val['parent'].present? %>
+              <li><a href="<%= '/' << val['parent'] if val['parent'].present? %>/<%= val['link'] %>"><%= val['title'] %></a></li>
+              <% @categories.each do |row| %>
+                <%  if row['parent'].present? && row['parent'].to_s == val['link'].to_s %>
+              <li><i class="glyphicon glyphicon-minus"></i><a href="/<%= row['link'] %>"><%=row['title']%></a></li>
+                <% end %>
+              <% end %>
+            <% end %>
+          <%end%>
+      </ul>
+    <%end%>
+
+    <%if @news.present?%>
+      <ul class="news-hot">
+          <li class="header">Tin liên quan</li>
+          <%@news.each do |val|%>
+            <li>
+                <a href="/<%= val['link_cate'] %>/<%= val['link'] %>">
+                    <img style="height:100px" src="<%= val['image'] %>"> 
+                    <div class="body" >
+                        <h4><%=val['title']%></h4></a>
+                    <p><%= raw  val['body'].scan(/.*>(.*)<\/\w>/).join %></p>
+                </div>
+            </li>
+          <%end%>
+      </ul>
+    <%end%>
+    
+    <button class='btn btn-lucky btn-face' id="edit-popup" >Đăng bài viết</button>
+    <button class='btn btn-lucky ' id="edit-popup" >Đỏi quà</button>
+
+</div>
+
+<div class="col-lg-9">
+    <div class="little"><h2>Tài Khoản</h2></div>
+    
+    <div class="product">
+        <div class="header">Thông tin tài khoản</div>
+        <%= form_for @customer, url: {action: "update_account"} do |f| %>
+        <%= f.hidden_field :id_customer %>
+        <%= f.hidden_field :id_group %>
+        <%= f.hidden_field :score %>
+        <% if @customer.errors.any? || @message.present? %>
+          <ul class="message-error" >
+              <% @customer.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+               <% if @message.present? %> <li><%= @message %></li><% end %>
+          </ul>
+        <% end %>
+        
+        <style>
+          .thumbnail img { height: 100%; width: auto;}
+        </style>
+        <div class="form-group">
+            <%= f.label :image, :class=>"control-label"%>
+            
+            <div class="fileinput fileinput-new" data-provides="fileinput">
+                <div class="fileinput-preview thumbnail"  style="width: 200px; height: 150px; float: left"></div>
+                <div style="height:150px; text-align: center;">
+                    <h1 style="font-size: 120px;"><%= @customer.score.to_i %></h1>
+                    <p style="font-size: 30px">Tích điểm</p>
+                </div>
+                <%= f.hidden_field :link%>
+                <div style="clear: left">
+                    <span class="btn btn-default btn-file">
+                        <%= f.file_field :image%>
+                    </span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-group">
+          <%= f.label :name %>
+          <%= f.text_field :name, class: "form-control", placeholder: "Nguyễn Văn A" %>
+        </div>
+        <div class="form-group">
+            <%= f.label :sex %>
+            <%= f.select :sex, options_for_select([["Nam",1],["Nữ",2]], @customer.sex),{}, :class=>'form-control' %>
+        </div>
+        <div class="form-group">
+            <%= f.label :email %>
+            <%= f.text_field :email, class: "form-control", placeholder: "example@gmail.com" %>
+        </div>
+        <div class="form-group">
+          <%= f.label :phone%>
+          <%= f.text_field :phone, class: "form-control", placeholder: "09802920902", maxlength: "11", onkeypress: "return isNumberKey(event)" %>
+        </div>
+        <style>
+            .address{
+                    width: 49%;
+                    float: left;
+                    margin-right: 1%;
+            }
+            </style>
+        <div class="form-group">
+            <p style="margin-bottom: 0px; margin-top: 10px;"><label class="control-label">Tỉnh - Huyện</label></p>
+            <%= f.select :id_province, options_for_select(@province.collect{ |u| [u['name'], u['id_province']] }, @customer.id_province), {} ,:class=>'form-control address'%>
+            <%= f.select :id_district, options_for_select(@district.collect{ |u| [u['name'], u['id_district']] }, @customer.id_district), {} ,:class=>'form-control address'%>
+        </div>
+            
+        <div class="form-group">
+            <p style="margin-bottom: 0px; margin-top: 45px;"><label class="control-label">Xã - Ấp</label></p>
+            <%= f.select :id_ward, options_for_select(@ward.collect{ |u| [u['name'], u['id_ward']] }, @customer.id_ward), {} ,:class=>'form-control address'%>
+            <%= f.text_field :address, class: "form-control address", placeholder: "Số nhà" %>
+        </div>
+
+        <div class="form-group" >
+            <input id="upmk" name="uppassword" class="check" type="checkbox" <%= 'checked=check' if @uppassword.present? %> style="float: left; margin-top: 10px;" />
+            <label style=" margin: 8px 10px;"  for="upmk"><strong>Cập nhật mật khẩu</strong></label>
+            <div class="form-group visible" > 
+                
+              <div class="form-group">
+                  <%= f.label :password %>
+                  <%= f.password_field :password, class: "form-control", placeholder: "Ít nhất 5 ký tự" %>
+              </div>
+              <div class="form-group">
+                  <%= f.label :password_confirmation %>
+                  <%= f.password_field :password_confirmation, class: "form-control", placeholder: "Ít nhất 5 ký tự" %>
+              </div>
+            </div>
+        </div>
+        <button class="btn-lucky pull-right">Cập nhật thông tin</button>
+    <% end %>
+    </div>
+</div>
+
+
+    <!-- Modal -->
+<div class="popup" >
+  <div class="body">
+        <%= form_for(@new, :url=>'/news_save',:html=>{:class=>"form-horizontal"}) do |f| %>
+            <%= f.hidden_field :status , :value=> "2" %>
+            <div class="form-group">
+                <%= f.label :image, :class=>"control-label col-lg-4"%>
+
+                <div class="col-lg-8">
+                    <div class="fileinput fileinput-new" data-provides="fileinput">
+                        <div class="new thumbnail"  style="width: 400px; height: 150px;"></div>
+                        <input name="link" type="hidden" />
+                        <div>
+                            <span class="btn btn-default btn-file">
+                                <%= f.file_field :image , :class=>"img"%>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <%= f.label :link, :class=>'control-label col-lg-4' %>
+                <div class="col-lg-6">
+                        <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                        <%= f.text_field :link, :class=>'form-control', :placeholder=>"Tên thanh toán" %>
+                    </div>
+                </div>
+                <span class="error right"><%=@new.errors[:link].first%></span>
+            </div>
+
+            <div class="form-group">
+                <%= f.label :title, :class=>'control-label col-lg-4' %>
+                <div class="col-lg-6">
+                        <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                        <%= f.text_field :title, :class=>'form-control', :placeholder=>"Tên thanh toán" %>
+                    </div>
+                </div>
+                <span class="error right"><%=@new.errors[:title].first%></span>
+            </div>
+
+            <div class="form-group">
+                <%= f.label :search, :class=>'control-label col-lg-4' %>
+                <div class="col-lg-6">
+                        <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                        <%= f.text_field :search, :class=>'form-control', :placeholder=>"Tên thanh toán" %>
+                    </div>
+                </div>
+                <span class="error right"><%=@new.errors[:search].first%></span>
+            </div>
+            <div class="form-group">
+                <%= f.label :id_categories, :class=>"control-label col-lg-4"%>
+                <div class="col-lg-6">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        <%= f.select :id_categories , options_for_select(option_array(@categories.select{|v| v['link'].include?("news")}), @new.id_categories), {} , :class=>"form-control" %>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <%= f.label :sort_order, :class=>"control-label col-lg-4" %>
+                <div class="col-lg-6">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        <%= f.number_field :sort_order, :class=>'form-control', :value=>'1', :placeholder=>"Dường đẫn danh mục" %>
+                    </div>
+                  <span class="error right"><%=@new.errors[:sort_order].first%></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <%= f.text_area :body, :class=>'form-control tinymce', :style=>"height:500px"%>
+            </div>
+
+            <div class="form-group">
+                    <button type="button" onclick="$(this).closest('.popup').hide(); $('.modal-backdrop').hide();" class="btn btn-lucky btn-google">Hủy Bỏ</button>
+                
+                    <button type="submit" class="btn btn-lucky pull-right">Lưu Lại</button>
+                
+            </div>
+        <% end %> 
+    </div>
+</div>
+<div class="modal-backdrop" >
+</div>
+    
+<script>
+  if( $("#customer_link").val() != ''){
+    $(".fileinput-preview.thumbnail").html('<img src="'+$("#customer_link").val()+'"/>');
+  }
+  
+  $("#customer_image").change(function(event) {
+        var files = this.files;
+        var img = new Image;
+        img.src = window.URL.createObjectURL(files[0]);
+        $("#customer_link").val(img.src);
+        $(".fileinput-preview.thumbnail").html(img);
+  });
+  
+  
+  $(".fileinput-exists").click(function(){
+      $('.img').val('');
+      $(".fileinput-preview.thumbnail").html('');
+  });
+  $(".img").change(function(event) {
+      var files = this.files;
+      var img = new Image;
+      img.src = window.URL.createObjectURL(files[0]);
+      $(".new.thumbnail").html(img);
+  });
+  
+  $("#customer_id_province").change(function(){
+      $.get( "/district/"+$("#customer_id_province").val(), function(data) {
+          $("#customer_id_district").html(data);
+          $.get( "/ward/"+$("#customer_id_district").val(), function(data) {
+              $("#customer_id_ward").html(data);
+          });
+      });
+  });
+  
+  $("#customer_id_district").change(function(){
+     $.get( "/ward/"+$("#customer_id_district").val(), function(data) {
+          $("#customer_id_ward").html(data);
+      });
+  });
+  
+  $("#edit-popup").click(function(){
+    var popup = $(".popup");
+    $(".modal-backdrop").show();
+    popup.show();
+  });
+  <% if @show %>
+    $(".popup").show();
+    $(".modal-backdrop").show();
+  <% end %>
+</script>

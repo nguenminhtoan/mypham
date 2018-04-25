@@ -1,0 +1,134 @@
+<div class="box">
+    <header class="dark">
+        <div class="icons"><a href="/admin/order" class="btn btn-primary"><i class="glyphicon glyphicon-chevron-left"></i>Trở Lại</a></div>
+        <h5>Chi Tiết Đơn Hàng</h5>
+    </header>
+    <div class="body">
+        <form class="form-horizontal" action="/admin/order/save.pdf" method="post">
+            <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+            <input type="hidden" value="<%= @order['id_order'] %>" name="id_order" />
+            <div class="form-group">
+                <label class="control-label col-lg-4">Tên Khách Hàng</label>
+                <div class="col-lg-4">
+                    <input value="<%= @order['customer'] %>" disabled="disable" class="form-control" >
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-lg-4">Số ĐT</label>
+                <div class="col-lg-4">
+                    <input value="<%= @order['phone'] %>" disabled="disable" class="form-control" >
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-lg-4">Email</label>
+                <div class="col-lg-4">
+                    <input value="<%= @order['email'] %>" disabled="disable" class="form-control" >
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-lg-4">Thanh Toán</label>
+                <div class="col-lg-4">
+                    <input value="<%= @order['payment'] %>" disabled="disable" class="form-control" >
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label class="control-label col-lg-4">Vận Chuyển</label>
+                <div class="col-lg-4">
+                    <input value="<%= @order['shipment'] %>" disabled="disable" class="form-control" >
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label class="control-label col-lg-4">Địa Chỉ</label>
+                <div class="col-lg-4">
+                    <input value="<%= @order['address'] %>" disabled="disable" class="form-control" >
+                </div>
+            </div>
+            <h3>Mã Đơn Hàng: <%=@order['id_order']%></h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th width="1%">STT</th>
+                        <th>Ảnh</th>
+                        <th width="30%" style="text-align: left !important">Tên Sản Phẩm</th>
+                        <th style="text-align: left !important">Giá</th>
+                        <th style="text-align: left !important">Số Lượng</th>
+                        <th style="text-align: left !important">Tổng Tiền</th>
+                    </tr>
+                </thead>
+
+                <tbody id="table">
+                    <% @orderdetail.present? %>
+                    <% @orderdetail.each_with_index do |row, index| %>
+                    <tr>
+                        <td align="center"><%= index+1 %></td>
+                        <td align="center"><img src="<%= row['image'] %>" width="120px"></td>
+                        <td><%= row['title'] %></td>
+                        <td><%= number_to_currency(row['price'], :unit => 'VNĐ', :precision => 0, :format => "%n %u") %></td>
+                        <td><%= number_with_delimiter(row['quantity'])%></td>
+                        <td><%= number_to_currency(row['quantity']*row['price'], :unit => 'VNĐ', :precision => 0, :format => "%n %u") %></td>
+                    </tr>
+                    <% end %>
+                </tbody>                
+
+            </table>
+            
+            <div class="form-group">
+                <label class="control-label col-lg-9">Tổng phụ</label>
+                <div class="col-lg-3">
+                    <input disabled="disable" value="<%= number_to_currency(@order['total'], :unit => 'VNĐ', :precision => 0, :format => "%n %u") %>" class="form-control">
+                </div>
+            </div>
+            
+            <% if @sale.present? %>
+            <div class="form-group">
+                <label class="control-label col-lg-9">Khuyến mãi</label>
+                <div class="col-lg-3">
+                    <input disabled="disable" value="<%= @sale['percent']  %> %" class="form-control">
+                </div>
+            </div>
+            <% end %>
+
+            <div class="form-group">
+                <label class="control-label col-lg-9">Phi Vận Chuyển</label>
+                <div class="col-lg-3">
+                    <input disabled="disable" value="<%= number_to_currency(@order['freeship'], :unit => 'VNĐ', :precision => 0, :format => "%n %u") %> " class="form-control">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="control-label col-lg-9">VAT</label>
+                <div class="col-lg-3">
+                    <input disabled="disable" value="<%= @order['vat']  %>" class="form-control">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="control-label col-lg-9">Thành Tiền</label>
+                <div class="col-lg-3">
+                    <% @order['freeship'] = 0 unless @order['freeship'].present?  %>
+                    <% @order['total'] = 0 unless @order['total'].present?  %>
+                    <% @order['vat'] = 0  unless @order['vat'].present?  %>
+                    <% @order['vat'] = (@order['freeship']+@order['total'])*@order['vat']/100  unless @order['vat'].present?  %>
+                    <input disabled="disable" value="<%= number_to_currency( @order['freeship']+(@sale.present? ? @order['total']-(@order['total']*@sale['percent']/100) : @order['total']).to_i+@order['vat'], :unit => 'VNĐ', :precision => 0, :format => "%n %u") %>" class="form-control">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-lg-9"></div>
+                <div class="col-lg-3">
+                    <% if @order['id_status'].to_s == "2".to_s %>
+                      <button type="submit" class="btn btn-success"><i class="glyphicon glyphicon-ok"></i>Xác nhận đơn hàng</button>
+                    <% else %>
+                      <a type="button" href="/admin/order/order_pdf.pdf?id_order=<%= @order['id_order'] %>" class="btn btn-danger"><i class="glyphicon glyphicon-ok"></i> In hóa đơn bán hàng</a>
+                    <% end %>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

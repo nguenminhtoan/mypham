@@ -1,0 +1,165 @@
+<% content_for(:title, "Giỏ hàng") %>
+<script>
+  function Check(){
+    $.get( "/check/code?code="+$("#code").val(), function(data) {
+      if (data == 1)
+      {
+        alert("Mã Khuyến Mãi Hợp lệ");
+      }
+      else if (data == 2)
+      {
+        alert(" Đã Hủy Áp Dụng Mã");
+      }
+      else
+      {
+         alert("Mã Khuyến Mãi Không Tồng Tại");
+        $("#code").val("");
+      }
+      
+    });
+  }
+</script>
+<script src="/javascripts/custom.js" ></script>
+<div class="col-lg-3">
+    <%if @categories.present?%>
+      <ul class="menu" >
+          <li class="header">DANH MỤC SẢN PHẨM</li>
+          <%@categories.each do |val|%>
+            <% if !val['link'].include?("news/") && !val['parent'].present? %>
+                <li><a href="<%= '/' << val['parent'] if val['parent'].present? %>/<%= val['link'] %>"><%= val['title'] %></a></li>
+                <% @categories.each do |row| %>
+                  <%  if row['parent'].present? && row['parent'].to_s == val['link'].to_s %>
+                <li><i class="glyphicon glyphicon-minus"></i><a href="/<%= row['parent']%>/<%= row['link'] %>"><%=row['title']%></a></li>
+                  <% end %>
+                <% end %>
+            <% end %>
+          <%end%>
+      </ul>
+    <%end%>
+
+    <%if @hot.present?%>
+      <ul class="menu" >
+          <li class="header">SẢN PHẨM BÁN CHẠY</li>
+          <li class="hot">
+              <%@hot.each do |val|%>
+                <a href="<%= "/" << val['parent_cat'] if val['parent_cat'].present? %><%= "/" << val['categories'] if val['categories'].present? %><%= "/"  << val['link'] %>"><image src="<%=val['image']%>"/></a>
+              <%end%>		
+          </li>
+      </ul>
+    <%end%>
+    
+    <%if @categories.present?%>
+      <ul class="menu" >
+          <li class="header">Tin Tức</li>
+          <%@categories.each do |val|%>
+            <% if val['link'].include?("news") && !val['parent'].present? %>
+              <li><a href="<%= '/' << val['parent'] if val['parent'].present? %>/<%= val['link'] %>"><%= val['title'] %></a></li>
+              <% @categories.each do |row| %>
+                <%  if row['parent'].present? && row['parent'].to_s == val['link'].to_s %>
+              <li><i class="glyphicon glyphicon-minus"></i><a href="/<%= row['link'] %>"><%=row['title']%></a></li>
+                <% end %>
+              <% end %>
+            <% end %>
+          <%end%>
+      </ul>
+    <%end%>
+
+    <%if @news.present?%>
+      <ul class="news-hot">
+          <li class="header">Tin liên quan</li>
+          <%@news.each do |val|%>
+            <li>
+                <a href="/<%= val['link_cate'] %>/<%= val['link'] %>">
+                    <img style="height:100px" src="<%= val['image'] %>"> 
+                    <div class="body" >
+                        <h4><%=val['title']%></h4></a>
+                    <p><%= raw  val['body'].scan(/.*>(.*)<\/\w>/).join %></p>
+                </div>
+            </li>
+          <%end%>
+      </ul>
+    <%end%>
+</div>
+
+<div class="col-lg-9">
+    <div class="little"><h2>Giỏ Hàng</h2></div>
+    <form id="cart_detail" action="/update_cart" method="POST" >
+    <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+    <div class="product">
+        <table class="table">
+            <thead>
+            <th width="5%"></th>
+            <th width="8%">Mã SP</th>
+            <th width="10%">Hình Ảnh</th>
+            <th width="25%">Tên Sản Phẩm</th>
+            <th>Đơn Giá</th>
+            <th>Số Lượng</th>
+            <th>Thành Tiền</th>
+            </thead>
+            <tbody>
+              <% sum = 0 %>
+              <% @cart.each_with_index do |val, index| %>
+                <tr>
+                    <td><%= hidden_field_tag :product,{}, :name=>'product[][id]', value: val['id_product'] %><button class="remove"><i class="glyphicon glyphicon-remove" ></i></button></td>
+                    <td align="center"><%= index %></td>
+                    <td><img src="<%= val['image'] %>"/></td>
+                    <td><%= val['title'] %></td>
+                    <td><%= number_to_currency(val['price'], :unit => 'VNĐ', :precision => 0, :format => "%n %u") %></td>
+                    <td id="1">
+                        <button type="button" class="btn up"><i class="glyphicon glyphicon-plus"></i></button>
+                        <input  class="val" size="1" maxlength="2" min="1" name="product[][num]" onkeypress="return isNumberKey(event)" value="<%= val['quantity'] %>" />
+                        <button type="button" class="btn down"><i class="glyphicon glyphicon-minus"></i></button>
+                    </td>
+                    <% sum +=  val['price']*val['quantity'] %>
+                    <td><%= number_to_currency(val['price']*val['quantity'], :unit => 'VNĐ', :precision => 0, :format => "%n %u") %></td>
+                </tr>
+              <% end %>
+                <tr>
+                    <td colspan="7" style="padding-top: 25px">
+                        Phiếu ưu đãi: <input id="code" name="code" value="<%= @order['id_voucher'].to_s << "-" << @order['code'].to_s if @order.present? %>" class="find" placeholder="Mã ưu đãi" />
+                        <button onclick="Check()" type="button" class="btn-lucky" >Áp dụng ưu đãi</button>
+                        <button id="update_cart" class="btn-lucky pull-right" >Cập nhật giỏ hàng</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    </form>
+    <div class="product product-total">
+        <div class="header">Tổng Đơn Hàng</div>
+        <h3><%= number_to_currency( @order.present? ? sum-(sum*@order['percent']/100) : sum, :unit => 'VNĐ', :precision => 0, :format => "%n %u") %></h3>
+        <div><a href="/pay" class="btn btn-lucky pull-right" >Thanh Toán</a></div>
+    </div>
+    
+    <style class="">
+      
+    </style>
+    <% if @product.present? %>
+    <div class="slider-index" style="margin:0px; width: 100%;" >
+        <h3>Sản phẩm Mua Cùng </h3>
+        <div class="slide-holder">
+            <div class="slide-pager">
+                <div class="slide-control-prev"><i class="glyphicon glyphicon-menu-left"></i></div>
+                <div class="slide-control-next"><i class="glyphicon glyphicon-menu-right"></i></div>
+            </div>
+            <div class="slide-container">
+                <div class="slide-stage">
+                    <% @product.each do |val|%>
+                    <div class="slide-image">
+                      <a href="<%= "/" << val['parent_cat'] if val['parent_cat'].present? %><%= "/" << val['categories'] if val['categories'].present? %><%= "/"  << val['link'] %>" >
+                          <div class="img" style="background-image: url('<%= val['image'] %>')"></div>
+                          <p><%= truncate(val['title'], length:55)%></p>
+                      </a>
+                    </div>
+                    <% end %>
+                </div>
+            </div>
+        </div>
+    </div>
+    <% end %>
+</div>
+
+<script>
+
+
+</script>

@@ -1,0 +1,235 @@
+<script src="/tinymce/tinymce.min.js"></script>
+<script>tinymce.init({ selector:'textarea' });</script>
+<script>
+  function deleteRow(name){
+    attribute = $(name).closest('tr').find('td:first').text();
+    html = '<option value="1">'+ attribute +'</option>';
+    $(name).closest('tbody').find('tr:last').find('td:first').find('select').append(html);
+    $(name).closest('tr').remove();
+  }
+  
+  function addRow(name){
+    id_attribute = $(name).closest('tr').find('td:first').find(':selected').val();
+    attribute = $(name).closest('tr').find('td:first').find(':selected').text();
+    val = $(name).closest('tr').find('td').eq(1).find('input').val();
+    html = '<tr>\n\
+              <input name="attributes[][id_attribute]" type="hidden" value= "'+ id_attribute +'" />\n\
+              <input name="attributes[][attribute]" type="hidden" value= "'+ attribute +'" />  \n\
+              <input name="attributes[][value]" type="hidden" value= "'+ val +'" /> \n\
+              <td>'+ attribute +'</td>\n\
+              <td>'+ val +'</td>\n\
+              <td>\n\
+                <a onclick="deleteRow(this);" class="btn btn-danger">\n\
+                  <i class="glyphicon glyphicon-remove"></i>\n\
+                </a>\n\
+              </td>\n\
+            </tr>';
+    if (val != ''){
+      $(name).closest('tr').before(html);
+      $(name).closest('tr').find('td').eq(0).find(':selected').remove();
+      $(name).closest('tr').find('td').eq(1).find('input').val('');
+      $(name).closest('tr').find('td').eq(1).find('input').css({'border':'#aaa solid 1px'});
+      $(name).closest('tr').find('td').eq(1).find('input').attr('placeholder','');
+    }
+    else
+    {
+      $(name).closest('tr').find('td').eq(1).find('input').css({'border':'red solid 1px'});
+      $(name).closest('tr').find('td').eq(1).find('input').attr('placeholder','nhập giá trị');
+    }
+  }
+  
+  function addVoucher(name){
+    id_voucher = $(name).closest('tr').find('td:first').find(':selected').val();
+    voucher = $(name).closest('tr').find('td').eq(0).find(':selected').text();
+    html = '<tr>\n\
+              <input name="vouchers[][id_voucher]" type="hidden" value= "'+ id_voucher +'" />\n\
+              <input name="vouchers[][name]" type="hidden" value= "'+ voucher +'" />  \n\
+              <td>'+ voucher +'</td>\n\
+              <td>\n\
+                <a onclick="deleteRow(this);" class="btn btn-danger">\n\
+                  <i class="glyphicon glyphicon-remove"></i>\n\
+                </a>\n\
+              </td>\n\
+            </tr>';
+    if (voucher != ''){
+      $(name).closest('tr').before(html);
+      $(name).closest('tr').find('td:first').find(':selected').remove();
+    }
+  }
+</script>
+<div class="box">
+    <header class="dark">
+        <div class="icons"><a href="/admin/product" class="btn btn-primary"><i class="glyphicon glyphicon-chevron-left"></i>Trở Lại</a></div>
+        <h5>Thêm Sản Phẩm</h5>
+    </header>
+    <div class="body">
+        <%= form_for(@new, :url=>{:action=>'save'}, :html => {:class=>'form-horizontal'}) do |f| %>
+        
+            <div class="form-group">
+                <%= f.label :image, :class=>"control-label col-lg-4"%>
+                
+                <div class="col-lg-4">
+                    <div class="fileinput-preview thumbnail left"  style="min-width: 400px; height: 150px;">
+                    <% if @link.present? %>
+                      <% @link.each do |val| %>  
+                        <image src="<%= val %>" />
+                        <input type="hidden" name="link[][image]" value="<%= val %>" />
+                      <% end %>
+                    <% end %>
+                    </div>
+                    <div>
+                        <span class="btn btn-default btn-file">
+                            <%= f.file_field :image, multiple: true, name: "image[]" %>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="form-group">
+                <%= f.label :link, :class=>"control-label col-lg-4"%>
+                <div class="col-lg-4">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        <%= f.text_field :link, :class=>'form-control' %>
+                    </div>
+                </div>
+                <span class="error right"><%=@new.errors[:link].first%></span>
+            </div>
+        
+            <div class="form-group">
+                <%= f.label :title, :class=>"control-label col-lg-4"%>
+                <div class="col-lg-4">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        <%= f.text_field :title, :class=>ErrFieldClass(@new.errors[:title].any?, "form-control"), :placeholder=>"" %>
+                    </div>
+                </div>
+                <span class="error right"><%=@new.errors[:title].first%></span>
+            </div>
+        
+            <div class="form-group">
+                <%= f.label :id_categories, :class=>"control-label col-lg-4"%>
+                <div class="col-lg-4">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        <%= f.select :id_categories , options_for_select(option_array(@categories), @new.id_categories), {} , :class=>"form-control" %>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="form-group">
+                <%= f.label :id_provider, :class=>"control-label col-lg-4"%>
+                <div class="col-lg-4">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        <%= f.select :id_provider, options_for_select(@provider.collect{ |u| [u['name'], u['id_provider']] }, @new.id_provider), {} ,:class=>'form-control'%>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="form-group">
+                <%= f.label :price, :class=>"control-label col-lg-4"%>
+                <div class="col-lg-4">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        <%= f.number_field :price, :class=>'form-control', :min => '1'%>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="form-group">
+                <%= f.label :sale, :class=>"control-label col-lg-4"%>
+                <div class="col-lg-4">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        <%= f.number_field :sale, :class=>'form-control', :min => '0', :value => '0'%>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="form-group">
+                <%= f.label :quantity, :class=>"control-label col-lg-4"%>
+                <div class="col-lg-4">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        <%= f.number_field :quantity, :class=>'form-control', :min => '1', :value=> '0'%>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="form-group">
+                <div class="col-lg-4">
+                  
+                </div>
+                <div class="col-lg-4">
+                    <table class="table table-bordered">
+                        <head>
+                            <tr>
+                                <th width="300px">Thuộc tính</th>
+                                <th width="300px">Giá trị</th>
+                                <th>Chọn</th>
+                            </tr>
+                        </head>
+                        <tbody>
+                            <% if @att.present? %>
+                            <% @att.each do |row| %>
+                            <tr>
+                                <input name="attributes[][id_attribute]" type="hidden" value= "<%= row['id_attribute'] %>" />                                
+                                <input name="attributes[][attribute]" type="hidden" value= "<%= row['attribute'] %>" />
+                                <input name="attributes[][value]" type="hidden" value= "<%= row['value'] %>" />
+                                <td><%= row['attribute'] %></td>
+                                <td><%= row['value'] %></td>
+                                <td>
+                                    <a onclick="deleteRow(this);" class="btn btn-danger">
+                                      <i class="glyphicon glyphicon-remove"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <% end %>
+                            <% end %>
+                            <tr>
+                                <td><%= select_tag "attribute", options_for_select(@attribute.map{|u| [u['attribute'], u['id_attribute']]})%></td>
+                                <td><input></td>
+                                <td><a href="javacript:void(0);" onclick="addRow(this);" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i></a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        
+        
+            <div class="form-group">
+                <%= f.label :body, :class=>"control-label col-lg-4"%>
+                <div class="col-lg-8">
+                    <%= f.text_area :body,:class => "tinymce", :rows => '20' %>
+                </div>
+            </div>
+        
+            <div class="form-group">
+                <div class="col-lg-6">
+                    <button name="huy" class="btn btn-danger pull-right"><i class="glyphicon glyphicon-remove"></i>Hủy Bỏ</button>
+                </div>
+                <div class="col-lg-3">
+                    <button type="submit" class="btn btn-success"><i class="glyphicon glyphicon-ok"></i>Lưu Lại</button>
+                </div>
+            </div>
+        <%end%>
+    </div>
+</div>
+<script>
+  
+  $("#product_image").change(function(event) {
+    $(".fileinput-preview.thumbnail").html('');
+    var files = this.files;
+    for(i=0; i < files.length; i++){
+      var img = new Image;
+      img.src = window.URL.createObjectURL(files[i]);
+      $(".fileinput-preview.thumbnail").append(img);
+      var input = document.createElement("input");
+      input.type = "hidden";
+      input.value = img.src;
+      input.name = 'link[image][]';
+      $(".fileinput-preview.thumbnail").append(input);
+    }
+  });    
+</script>

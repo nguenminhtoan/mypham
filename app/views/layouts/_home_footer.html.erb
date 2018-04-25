@@ -1,0 +1,88 @@
+
+<style>
+    .footer ul a{
+        color: #333;
+    }
+    .footer ul a:hover, .footer ul li:hover a{
+        background-color: #FFF;
+    }
+    
+</style>
+<section class="footer row">
+    <div class="product full">
+        <div class="col-lg-6">
+            <h4>Hỗ trợ tư vấn châm sóc khách hàng miễn phí</h4>
+            <div class="hotline">0123 456 789</div>
+            <span>7:00 ~ 20:00</span>
+            <div>Thời gian mở cửa</div>
+        </div>
+        <div class="info">
+            <div class="title" >
+                <div class="noidung text-center">Giao hàng toàn quốc</div>
+            </div>
+            <div class="title" >
+                <div class="noidung text-center">Sản phẩm chất lượng</div>
+            </div>
+        </div>
+    </div>
+    <hr style="border: #ee82a6 solid 1px" />
+    <% @categories.each do |val| %>
+      <% if val['id_parent_categories'].nil? %>  
+        <div class="col-lg-3">
+            <ul>
+            <% if @categories.select{ |v| v['id_parent_categories'] != '' && v['id_parent_categories'].to_s == val['id_categories'].to_s}.present?  %>
+              <li class="header"><%=val['title']%></li>
+                <% @categories.each do |row| %>
+                  <%  if row['id_parent_categories'].present? && row['id_parent_categories'].to_s == val['id_categories'].to_s %>
+                    <% if val['link'].include?('news/') %>
+                    <li><a href="/<%= row['link'] %>"><%=row['title']%></a></li>
+                    <% else %>
+                    <li><a href="/<%= val['link']%>/<%= row['link'] %>"><%=row['title']%></a></li>
+                    <% end %>
+                  <% end %>
+                <% end %>
+            <% else  %>
+                    <li ><a href="/<%= val['link'] %>" ><%=val['title']%></a></li>
+            <% end %>
+            </ul>
+        </div>
+      <% end %>
+    <% end %>
+    <div style="clear: left"><div>
+    <div class="col-lg-6">
+        <ul>
+            <li class="header">Thông Tin Cửa Hàng</li>
+            <li>Hotline: 0982 821 288</li>
+            <li>Email: nguenminhtoan@gmail.com</li>
+            <li>Địa Chỉ: 226D, 3/2, Ninh Kiều, Cần Thơ</li>
+        </ul>
+    </div>
+
+    <div class="col-lg-3">
+        <ul>
+            <li class="header">Tài Khoản Của Bạn</li>
+            <li><a href="/account">Tài Khoản</a></li>
+            <li><a href="/pay">Thanh toán</a></li>
+            <li><a href="/cart">Giỏ hàng</a></li>
+        </ul>
+    </div>
+
+    <div class="col-lg-3">
+        <ul>
+            <li class="header">Hướng Dẫn</li>
+            <li><a href="/news/tin-tuc/pay">Cách thức thanh toán</a></li>
+            <li><a href="/news/tin-tuc/buy">Hướng đãn mua</a></li>
+            <li><a href="/news/tin-tuc/help">Liên hệ</a></li>
+        </ul>
+    </div>
+    <hr style="border: #ee82a6 solid 1.2px; clear:left" />
+    <div class="logo">
+        <a href="/" ><span>K</span>OREAN FASHION</a>
+    </div>
+    <div class="product product-info" >
+        <strong>KẾT NÓI</strong>
+        <a href="https://www.facebook.com/M%E1%BB%B9-Ph%E1%BA%A9m-Ch%C3%ADnh-H%C3%A3ng-H%C3%A0n-Nh%E1%BA%ADt-488524008177904/" class="btn-lucky btn-face btn">face</a>
+        <a href="" class="btn-lucky btn-google btn">youtobe</a>
+        <a href="" class="btn-lucky btn-zalo btn">zalo</a>
+    </div>
+</section>

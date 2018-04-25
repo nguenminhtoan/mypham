@@ -1,0 +1,85 @@
+<div class="box">
+    <header class="dark">
+        <div class="icons" style="padding:3px">
+            <a href="/admin/payment" class="btn btn-primary"><i class="glyphicon glyphicon-chevron-left"></i>Trở Lại</a>
+        </div>
+        <h5>Thêm Thanh Toán</h5>
+    </header>
+    <div class="body">
+        <%= form_for(@new, :url=>{:action=>'update'},:html=>{:class=>"form-horizontal"}) do |f| %>
+            <%= f.hidden_field :id_payment %>
+            <div class="form-group">
+                <%= f.label :image, :class=>"control-label col-lg-4"%>
+                
+                <div class="col-lg-8">
+                    <div class="fileinput fileinput-new" data-provides="fileinput">
+                        <div class="fileinput-preview thumbnail"  style="width: 200px; height: 150px;">
+                            <img src ="<%= @new.image%>">
+                        </div>
+                        <input name="link" type="hidden" />
+                        <div>
+                            <span class="btn btn-default btn-file">
+                                <%= f.file_field :image , :class=>"img"%>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="form-group">
+                <%= f.label :name, :class=>'control-label col-lg-4' %>
+                <div class="col-lg-4">
+                        <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                        <%= f.text_field :name, :class=>'form-control', :placeholder=>"Tên thanh toán" %>
+                    </div>
+                </div>
+                <span class="error right"><%=@new.errors[:title].first%></span>
+            </div>
+            
+            <div class="form-group">
+                <%= f.label :card, :class=>'control-label col-lg-4' %>
+                <div class="col-lg-4">
+                        <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                        <%= f.text_area :card, :class=>'form-control', :placeholder=>"Tên của loại danh mục" %>
+                    </div>
+                </div>
+            </div>
+        
+            
+            <div class="form-group">
+                <%= f.label :status, :class=>'control-label col-lg-4' %>
+                <div class="col-lg-4">
+                        <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                        <%= f.select :status, options_for_select([["Công khai", 1], ["Riêng tư", 2]],  @new.status),{}, :class=>'form-control', :placeholder=>"Dường đẫn danh mục" %>
+                    </div>
+                </div>
+                <span class="error right"><%=@new.errors[:status].first%></span>
+            </div>
+        
+            <div class="form-group">
+                <div class="col-lg-6">
+                    <button name="huy" class="btn btn-danger pull-right"><i class="glyphicon glyphicon-remove"></i>Hủy Bỏ</button>
+                </div>
+                <div class="col-lg-3">
+                    <button type="submit" class="btn btn-success"><i class="glyphicon glyphicon-ok"></i>Lưu Lại</button>
+                </div>
+            </div>
+        <% end %> 
+    </div>
+</div>
+    <script>
+        $(".fileinput-exists").click(function(){
+            $('.img').val('');
+            $(".fileinput-preview.thumbnail").html('');
+        });
+        $(".img").change(function(event) {
+            var files = this.files;
+            var img = new Image;
+            img.src = window.URL.createObjectURL(files[0]);
+            $(".fileinput-preview.thumbnail").html(img);
+        });
+    </script>
+

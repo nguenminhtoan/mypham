@@ -1,0 +1,107 @@
+<div class="col-lg-3">
+  <div class="box dashboard">
+      <div class="title-dashboard">
+          Tổng danh số
+        </div>
+        <div class="body">
+            <span><%= number_to_currency(@total['thanhtien']/1000, :unit => 'K', :precision => 0, :format => "%n %u") %></span>
+        </div>
+        <div class="title-dashboard">
+          <a href="" style="color:#FFF">Xem chi tiết ...</a>
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-3">
+  <div class="box dashboard">
+      <div class="title-dashboard">
+          Số lượng đơn hàng
+        </div>
+        <div class="body">
+          <i class="glyphicon glyphicon-usd" style=" opacity:0.5;"></i>
+            <span><%= @total['order'] %></span>
+        </div>
+        <div class="title-dashboard">
+          <a href="" style="color:#FFF">Xem chi tiết ...</a>
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-3">
+  <div class="box dashboard">
+      <div class="title-dashboard">
+          Số lượng sản phẩm
+        </div>
+        <div class="body">
+          <i class="fa fa-product-hunt" style=" opacity:0.5;"></i>
+            <span><%= @total['product'] %></span>
+        </div>
+        <div class="title-dashboard">
+          <a href="" style="color:#FFF">Xem chi tiết ...</a>
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-3">
+  <div class="box dashboard">
+      <div class="title-dashboard">
+          Khách hàng
+        </div>
+        <div class="body">
+          <i class="glyphicon glyphicon-user" style=" opacity:0.5;"></i>
+            <span><%= @total['user'] %></span>
+        </div>
+        <div class="title-dashboard">
+          <a href="" style="color:#FFF">Xem chi tiết ...</a>
+        </div>
+    </div>
+</div>
+<div id="p_chart">
+    <svg id="pieChart">
+    <text x="125" y="40" font-size="36px" style="fill :black">PV</text>
+    <svg>
+    <g class="legend" transform="translate(0,0)">
+    <rect x="400" y="180" width="30" height="30" style="fill: rgb(255, 54, 115);"></rect>
+    <text x="500" y="195" dy=".35em" style="text-anchor: end; font-size: 14px;">Tồn Kho</text>
+    </g>
+    <g class="legend" transform="translate(0,40)">
+    <rect x="400" y="180" width="30" height="30" style="fill: rgb(52, 152, 219);"></rect>
+    <text x="500" y="195" dy=".35em" style="text-anchor: end; font-size: 14px;">Đã Bán</text>
+    </g>
+    <svg>
+    
+    </svg>
+    <g transform="translate(150,160)">
+    <path class="pie" d="M0,150A150,150 0 1,1 0,-150A150,150 0 1,1 0,150Z" style="fill: rgb(255, 54, 115);"></path>
+    <text class="pieNum" transform="translate(-2.871426524195212e-14,75)"><%= ((@total['kho'].to_f - @total['ban'].to_f)/@total['kho'].to_f*100).round(2).to_s + "%" %></text>
+    </g>
+    <% 
+      pre = @total['ban'].to_f.present? && @total['kho'].to_f.to_i > 0 ? ((@total['ban'].to_f.to_f/@total['kho'].to_f.to_f)*100).round(2).to_i  : 0
+      if pre < 25	&& pre >= 0
+        u = 0
+        x = (150.to_f/25.to_f)*pre
+        y = - Math.sqrt(150*150 - x*x)
+        n = x
+        m =	y/2 + 75
+        elsif pre < 50	&& pre >= 25
+        u = 0
+        x = 150 - (150.to_f/25.to_f)*(pre - 25)
+        y = Math.sqrt(150*150 - x*x)
+        n = 100-(100.to_f/25.to_f)*(pre - 25)
+        m = -Math.sqrt(100*100 - n*n)
+        elsif pre < 75	&& pre >= 50
+        u = 1
+        x = -(150.to_f/25.to_f)*(pre - 50)
+        y = Math.sqrt(150*150 - x*x)
+        else
+        u = 1
+        x = -(150 - (150.to_f/25.to_f)*(pre - 75))
+        y = - Math.sqrt(150*150 - x*x)
+        end
+    %>
+    <g transform="translate(150,160)">
+    <path class="pie" d="M0.0001,-150A150,150 0 <%= u %>,1 <%= x %>,<%= y %>L0,0Z" style="fill: rgb(52, 152, 219);"></path>
+    <text class="pieNum" transform="translate(0,-75)"><%= ((@total['ban'].to_f/@total['kho'].to_f)*100).round(2).to_s+"%" %></text>
+    </g>
+    </svg>
+</svg></div>

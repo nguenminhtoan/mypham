@@ -1,0 +1,92 @@
+<% content_for(:title, "Thông tin đơn hàng") %>
+<div class="col-lg-3">
+    <%if @categories.present?%>
+      <ul class="menu" >
+          <li class="header">DANH MỤC SẢN PHẨM</li>
+          <%@categories.each do |val|%>
+            <% if !val['link'].include?("news/") && !val['parent'].present? %>
+                <li><a href="<%= '/' << val['parent'] if val['parent'].present? %>/<%= val['link'] %>"><%= val['title'] %></a></li>
+                <% @categories.each do |row| %>
+                  <%  if row['parent'].present? && row['parent'].to_s == val['link'].to_s %>
+                <li><i class="glyphicon glyphicon-minus"></i><a href="/<%= row['parent']%>/<%= row['link'] %>"><%=row['title']%></a></li>
+                  <% end %>
+                <% end %>
+            <% end %>
+          <%end%>
+      </ul>
+    <%end%>
+
+    <%if @hot.present?%>
+      <ul class="menu" >
+          <li class="header">SẢN PHẨM BÁN CHẠY</li>
+          <li class="hot">
+              <%@hot.each do |val|%>
+                <a href="<%= "/" << val['parent_cat'] if val['parent_cat'].present? %><%= "/" << val['categories'] if val['categories'].present? %><%= "/"  << val['link'] %>"><image src="<%=val['image']%>"/></a>
+              <%end%>		
+          </li>
+      </ul>
+    <%end%>
+
+    <%if @categories.present?%>
+      <ul class="menu" >
+          <li class="header">Tin Tức</li>
+          <%@categories.each do |val|%>
+            <% if val['link'].include?("news") && !val['parent'].present? %>
+              <li><a href="<%= '/' << val['parent'] if val['parent'].present? %>/<%= val['link'] %>"><%= val['title'] %></a></li>
+              <% @categories.each do |row| %>
+                <%  if row['parent'].present? && row['parent'].to_s == val['link'].to_s %>
+              <li><i class="glyphicon glyphicon-minus"></i><a href="/<%= row['link'] %>"><%=row['title']%></a></li>
+                <% end %>
+              <% end %>
+            <% end %>
+          <%end%>
+      </ul>
+    <%end%>
+
+    <%if @news.present?%>
+      <ul class="news-hot">
+          <li class="header">Tin mới nhất</li>
+          <%@news.each do |val|%>
+            <li>
+                <a href="/<%= val['link_cate'] %>/<%= val['link'] %>">
+                    <img style="height:100px" src="<%= val['image'] %>"> 
+                    <div class="body" >
+                        <h4><%=val['title']%></h4></a>
+                    <p><%= raw  val['body'].scan(/.*>(.*)<\/\w>/).join %></p>
+                </div>
+            </li>
+          <%end%>
+      </ul>
+    <%end%>
+
+</div>
+<div class="col-lg-9">
+    
+    <div class="little"><h2>Thông Tin Đơn Hàng <%= @status['id_order'] %></h2></div>
+    <div class="product full">
+        <div class="row" style=" border:#EEE solid 1px; border-radius:5px; margin-top:20px; margin-bottom:15px; padding-top:10px;">
+
+            <div style="padding:30px" >
+                <div id="cart-progress-bar" class="clearfix">
+                    <div class="cart-progress-bar cart-progress-bar-<%= @status['id_status'].to_i-2 %>  clearfix">
+                        <div class="step step-1">
+                            <span>Tiếp nhận đơn hàng</span>
+                            <div class="step-icon">1</div>
+                        </div>
+                        <div class="bar-1"></div>
+                        <div class="step step-2">
+                            <span>Đang vận chuyển</span>
+                            <div class="step-icon">2</div>
+                        </div>
+                        <div class="bar-2"></div>
+                        <div class="step step-3">
+                            <span>Giao hàng thành công</span>
+                            <div class="step-icon">3</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>

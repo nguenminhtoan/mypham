@@ -1,0 +1,201 @@
+<% content_for(:title, "Tin tức sản phẩm") %>
+<div class="col-lg-3">
+    
+
+    <%if @categories.present?%>
+      <ul class="menu" >
+          <li class="header">DANH MỤC SẢN PHẨM</li>
+          <%@categories.each do |val|%>
+            <% if !val['link'].include?("news/") && !val['parent'].present? %>
+                <li><a href="<%= '/' << val['parent'] if val['parent'].present? %>/<%= val['link'] %>"><%= val['title'] %></a></li>
+                <% @categories.each do |row| %>
+                  <%  if row['parent'].present? && row['parent'].to_s == val['link'].to_s %>
+                <li><i class="glyphicon glyphicon-minus"></i><a href="/<%= row['parent']%>/<%= row['link'] %>"><%=row['title']%></a></li>
+                  <% end %>
+                <% end %>
+            <% end %>
+          <%end%>
+      </ul>
+    <%end%>
+    
+    
+    <%if @categories.present?%>
+      <ul class="menu" >
+          <li class="header">Tin Tức</li>
+          <%@categories.each do |val|%>
+            <% if val['link'].include?("news") && !val['parent'].present? %>
+              <li><a href="<%= '/' << val['parent'] if val['parent'].present? %>/<%= val['link'] %>"><%= val['title'] %></a></li>
+              <% @categories.each do |row| %>
+                <%  if row['parent'].present? && row['parent'].to_s == val['link'].to_s %>
+              <li><i class="glyphicon glyphicon-minus"></i><a href="/<%= row['link'] %>"><%=row['title']%></a></li>
+                <% end %>
+              <% end %>
+            <% end %>
+          <%end%>
+      </ul>
+    <%end%>
+    
+    <%if @news.present?%>
+      <ul class="news-hot">
+          <li class="header">Tin mới nhất</li>
+          <%@news.each do |val|%>
+            <li>
+                <a href="/<%= val['link_cate'] %>/<%= val['link'] %>">
+                    <img style="height:100px" src="<%= val['image'] %>"> 
+                    <div class="body" >
+                        <h4><%=val['title']%></h4></a>
+                    <p><%= raw  val['body'].scan(/.*>(.*)<\/\w>/).join %></p>
+                </div>
+            </li>
+          <%end%>
+      </ul>
+    <%end%>
+    
+
+    <%if @hot.present?%>
+      <ul class="menu" >
+          <li class="header">SẢN PHẨM BÁN CHẠY</li>
+          <li class="hot">
+              <%@hot.each do |val|%>
+                <a href="<%= "/" << val['parent_cat'] if val['parent_cat'].present? %><%= "/" << val['categories'] if val['categories'].present? %><%= "/"  << val['link'] %>"><image src="<%=val['image']%>"/></a>
+              <%end%>		
+          </li>
+      </ul>
+    <%end%>
+    
+    <% if @product.present? %>
+        <% @product.each do |val|%>
+            <div class="items">
+                    <div class="img" style="background-image: url('<%= val['image'] %>')"></div>
+                    <p><%=val['title']%></p>
+                    <div class="price">
+                            <div class="cost"><%= number_to_currency(val['price'], :unit => 'VNĐ', :precision => 0, :format => "%n %u")%></div>
+                            <div class="number">
+                                    <button class="btn up"><i class="glyphicon glyphicon-plus"></i></button>
+                                    <input  class="val" maxlength="2" min="1" name="soluong" onkeypress="return isNumberKey(event)" value="1" />
+                                    <button class="btn down"><i class="glyphicon glyphicon-minus"></i></button>
+                            </div>
+                    </div>
+                    <div class="button"> 
+                            <a class="btn add" data-id="<%= val['id_product'] %>" >Thêm vào giỏ</a>
+                            <a class="btn detail" href="<%= "/" << val['parent_cat'] if val['parent_cat'].present? %><%= "/" << val['categories'] if val['categories'].present? %><%= "/"  << val['link'] %>" a>Chi tiết</a>
+                    </div>
+            </div>
+        <% end %>
+    <% end %>
+</div>
+<div class="col-lg-9">
+    <% if  @listnews.present? %>
+        <% @listnews.each do |val| %>
+        <div class="news">
+            <div class="img"> 
+                <img src="<%= val['image'] %>" />
+            </div>
+            <div class="tin">
+                <h4><a  href="/<%= val['categories'] %>/<%= val['link'] %>" ><%= val['title'] %></a></h4>
+                <div class="time">
+                    <span><i class="glyphicon glyphicon-comment"></i> <%= val['comment'] %> bình luận</span>
+                    <span><i class="glyphicon glyphicon-calendar"></i> <%= val['date_add'].strftime("%Y-%m-%d") %></span>
+                    <span><i class="glyphicon glyphicon-user"></i> <%= val['name'] %></span>
+                </div>
+                <div class="body">
+                    <p><%= raw  val['body'].scan(/.*>(.*)<\/\w>/).join%></p>
+                </div>
+            </div>
+        </div>
+        <% end %>
+    <% end %>
+    <% if @newsdetail.present? %>
+      <div class="little"><h2><%= @newsdetail['title'] %></h2></div>
+      <div class="product" >
+          <img src="<%= @newsdetail['image'] %>" />
+          <h3><%= @newsdetail['title'] %></h3>
+          <div class="time">
+              <span><i class="glyphicon glyphicon-comment"></i> <%= @newsdetail['comment'] %> bình luận</span>
+              <span><i class="glyphicon glyphicon-calendar"></i> <%= @newsdetail['date_add'].strftime("%Y-%m-%d") %></span>
+              <span><i class="glyphicon glyphicon-user"></i> <%= @newsdetail['name'] %></span>
+          </div>
+          <%= raw @newsdetail['body'] %>
+          <div class="review" id="binhluan" >
+              <h4><strong>Nhận xét của khách hàng</strong></h4>
+              <textarea id="comment" placeholder="Vui lòng để lại bình luận cho chúng tôi ..." ></textarea> 
+              <div class="review-number">Có <%= @newsdetail['comment'] %> lượt bình luận</div>
+              <button class="btn btn-comment">Gửi</button>
+              <div class="load-commnet" >
+                  <div class="comment">
+                    <% @comment.each do |row| %>
+                        <% unless row['id_parenr_news'].present? %>
+                          <div class="comment">
+                              <img src="<%= row['image'] %>">&nbsp;&nbsp;<b><%= row['name'] %></b><% if ['1','2'].include?(row['id_group'].to_s) %><span>admin</span><% end %>
+                              <p>
+                                  <%= row['text'] %><br/>
+                                  <label for="cm<%= row['id_comment_news'] %>" class="show-replay" >Trả Lời</label>&nbsp;<i>&bull;&nbsp;<%= date_now(row['date_add'].to_datetime) %></i>
+                              </p>
+                              <% bl = @comment.select{ |v| v['id_parenr_news'].present? && v['id_parenr_news'].to_s == row['id_comment_news'].to_s} %>
+                              <% if bl.present? %>
+                                <div class="reply-comment">
+                                    <% bl.each do |val| %>
+                                    <img src="<%= val['image'] %>">&nbsp;&nbsp;<b><%= val["name"] %></b><% if ['1','2'].include?(row['id_group'].to_s) %><span>admin</span><% end %>
+                                      <p>
+                                          <%= val['text'] %><br/>
+                                          <a>Trả Lời</a>&nbsp;<i>&bull;&nbsp;<%= date_now(val['date_add'].to_datetime) %></i>
+                                      </p>
+                                      <%= raw "<hr/>" if val != bl.last %>
+                                    <% end %>
+                                </div>
+                              <% end %>
+                              <input class="visible" type="checkbox" name="show" id="cm<%= row['id_comment_news'] %>"/>
+                              <i class="form-replay">
+                                  <textarea class="bl-comment" placeholder="Vui lòng để lại bình luận cho chúng tôi ..." ></textarea>
+                                  <button class="btn btn-comment btn-lucky" data-bl="<%= row['id_comment_news'] %>" >Gửi</button>
+                              </i>
+                          </div>
+                        <% end %>
+                      <% end %> 
+                  </div>
+              </div>
+          </div>
+      </div>
+    <% end %>
+</div>
+
+<% if @login.present? && @newsdetail.present? %>
+<form id="sent_comment" method="post">
+    <input name="comment[id_pro]" id="id_pro" value="<%= @newsdetail['id_news'] %>" type="hidden" >
+    <input name="comment[text]" id="text" value="" type="hidden" >
+    <input name="comment[parent_pro]" id="parent_pro" value="" type="hidden" >
+    <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+    
+</form>
+
+
+<script>
+  $(".btn-comment").click(function(){
+    var text = $(this).parent().find('textarea').val();
+    var id_commet = $(this).data('bl');
+    $('#parent_pro').val(id_commet).val();
+    $('#text').val(text).val();
+    if (text.length >= 10){
+      $.ajax({
+            type: "POST",
+            url: '/comment/news',
+            data: $("#sent_comment").serialize(),
+            success: function(data)
+            {
+              location.reload();
+            }
+        });
+    }
+    else
+    {
+      $(this).parent().find('textarea').attr('placeholder',"Nội dung phải lơn hơn 10 ký tự");
+    }
+  });
+</script>
+<% else %>
+<script>
+  $(".btn-comment").click(function(){
+    alert("Vui lòng đăng nhập");
+  });
+</script>
+<% end %>
