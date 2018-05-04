@@ -120,7 +120,7 @@ class Customer
   
   def self.autemail(db, email)
     sql = <<-SQL
-      SELECT id_customer, selt
+      SELECT id_customer, selt, id_group
       FROM customer
       WHERE email = '#{change(email)}'
     SQL

@@ -4,9 +4,9 @@
     </div>
     <hr>
     <div class="tab-content">
-        <div id="" class="tab-pane active">
+        <div class="tab-pane active">
             <% if @account.errors.any? %>
-              <ul class="errors">
+              <ul class="errors" style="color: red">
               <% @account.errors.full_messages.each do |message| %>
                   <% if message != " " %>
                     <%= raw("<li>"+ message +"</li>")%>

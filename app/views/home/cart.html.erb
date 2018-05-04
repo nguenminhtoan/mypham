@@ -93,7 +93,7 @@
             <th width="10%">Hình Ảnh</th>
             <th width="25%">Tên Sản Phẩm</th>
             <th>Đơn Giá</th>
-            <th>Số Lượng</th>
+            <th width="103px">Số Lượng</th>
             <th>Thành Tiền</th>
             </thead>
             <tbody>
@@ -101,7 +101,7 @@
               <% @cart.each_with_index do |val, index| %>
                 <tr>
                     <td><%= hidden_field_tag :product,{}, :name=>'product[][id]', value: val['id_product'] %><button class="remove"><i class="glyphicon glyphicon-remove" ></i></button></td>
-                    <td align="center"><%= index %></td>
+                    <td align="center"><%= val['id_product'] %></td>
                     <td><img src="<%= val['image'] %>"/></td>
                     <td><%= val['title'] %></td>
                     <td><%= number_to_currency(val['price'], :unit => 'VNĐ', :precision => 0, :format => "%n %u") %></td>

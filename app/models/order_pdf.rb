@@ -62,7 +62,7 @@ class OrderPdf < Prawn::Document
     total = @order.collect{ |v| v['price']*v['quantity']}.sum
     move_down 4
     
-    table [['Tạm tính:',price(total).to_s << " VNĐ"],["Khuyến mãi", @sale.to_s + " %" ],["Vận chuyển:",price(@user['freeship']).to_s << " VNĐ"],["Tổng đơn hàng:", price((total-(total*@sale/100))+@user['freeship']).to_s << " VNĐ"]] do
+    table [['Tạm tính:',price(total).to_s << " VNĐ"],["Khuyến mãi", @sale.to_s + " %" ],["Vận chuyển:",price(@user['freeship']).to_s << " VNĐ"],["Tổng đơn hàng:", price((total-(total*@sale/100))+@user['freeship'].to_i).to_s << " VNĐ"]] do
 			@cells.align = :center
 			row(0..3).border_width = 0
 			row(0..3).padding = 0

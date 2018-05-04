@@ -2541,6 +2541,7 @@ ul.error{
 }
 
 .form-control.has-error{
+    background-color: pink;
 }
 
 ul.error{

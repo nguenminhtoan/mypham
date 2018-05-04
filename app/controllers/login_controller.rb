@@ -21,9 +21,14 @@ class LoginController < ApplicationController
         @account.errors[:password] << "không đúng"
         render "index", :layout=>"layout1"
       else
-        session[:id_user] = res['id_customer']
-        session[:date_login] = DateTime.now.strftime('%Y/%m/%d %H:%M')
-        redirect_to '/admin/dashboard', :layout=>'layout_admin'
+        if res['id_group'].to_i <= 2
+          session[:id_user] = res['id_customer']
+          session[:date_login] = DateTime.now.strftime('%Y/%m/%d %H:%M')
+          redirect_to '/admin/dashboard', :layout=>'layout_admin'
+        else
+          @account.errors[:username] << "không có quyền đăng nhập"
+          render "index", :layout=>"layout1"
+        end
       end
     end
   end

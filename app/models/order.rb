@@ -3,15 +3,33 @@
 # and open the template in the editor.
 
 class Order
+  include ActiveModel::Model
+  
+  Fields = [:id_customer, :total, :id_payment, :id_status]
+  
+  attr_accessor *Fields
+  
+  def initialize(params={})
+    set(params)
+    
+  end
+  
+  def set(params={})
+    if params.present?
+      params.keys.each do |k|
+        send("#{k}=",params[k]) if respond_to?("#{k}=", true)
+      end
+    end
+  end
   def self.getlist(db)
     sql = <<-SQL
         SELECT o.id_order, o.total, o.address, p.name as payment, s.name as shipment, c.name as customer, st.name as status, o.date_add, s.price as freeship
         FROM orders o
         JOIN customer c ON o.id_customer = c.id_customer
         JOIN payment p ON p.id_payment = o.id_payment
-        JOIN shipment s ON s.id_shipment = o.id_shipment
+        LEFT JOIN shipment s ON s.id_shipment = o.id_shipment
         JOIN status st ON st.id_status = o.id_status
-        WHERE o.id_status != 'GH'
+        WHERE o.id_status != '1'
         GROUP BY o.id_order
         ORDER BY date_add DESC
     SQL
@@ -25,8 +43,8 @@ class Order
         SELECT o.id_order, o.total, o.address, p.name as payment, s.name as shipment, c.name as customer, c.email, c.phone, st.name as status, o.id_status, s.price as freeship
         FROM orders o
         JOIN customer c ON o.id_customer = c.id_customer
-        JOIN payment p ON p.id_payment = o.id_payment
-        JOIN shipment s ON s.id_shipment = o.id_shipment
+        LEFT JOIN payment p ON p.id_payment = o.id_payment
+        LEFT JOIN shipment s ON s.id_shipment = o.id_shipment
         JOIN status st ON st.id_status = o.id_status
         WHERE id_order = #{change(id)}
         GROUP BY o.id_order
