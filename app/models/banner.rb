@@ -30,7 +30,9 @@ class Banner
     sql = "SELECT id_banner, link, image, title, name, sort_order, date_add FROM banner ORDER BY sort_order"
     
     v = []
-    db.query(sql).each{|row| v << row }
+    stm = db.prepare(sql)
+    res = stm.execute
+    res.each{|row| v << row } if res.count > 0
     v
   end
   
