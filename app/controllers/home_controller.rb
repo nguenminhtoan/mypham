@@ -8,7 +8,7 @@ class HomeController < ApplicationController
     @categories = Categories.getlist(@db)
     @breadcrumb = []
     
-    sql = "SELECT p.id_product, p.image, p.title, p.price, p.sale, p.link, c.link as categories, pc.link as parent_cat FROM product p 
+    sql = "SELECT p.id_product, p.image, p.title, p.price, p.sale, p.link FROM product p 
           LEFT JOIN categories c ON c.id_categories = p.id_categories
           LEFT JOIN categories pc ON pc.id_categories = c.id_parent_categories
           GROUP BY p.id_product
@@ -21,12 +21,10 @@ class HomeController < ApplicationController
     
     
     sql = "
-          SELECT p.id_product, p.image, p.title, p.price, p.sale, p.link, c.link as categories, pc.link as parent_cat, SUM(do.id_product) as hot FROM product p 
+          SELECT p.id_product, p.image, p.title, p.price, p.sale, p.link FROM product p 
           LEFT JOIN categories c ON c.id_categories = p.id_categories
           LEFT JOIN categories pc ON pc.id_categories = c.id_parent_categories
-          LEFT JOIN orders_product do ON do.id_product = p.id_product
           GROUP BY p.id_product
-          ORDER BY hot DESC
           LIMIT 8
           "
           
@@ -36,7 +34,7 @@ class HomeController < ApplicationController
     
     
     sql = "
-          SELECT p.id_product, p.image, p.title, p.price, p.sale, p.link, c.link as categories, pc.link as parent_cat FROM product p 
+          SELECT p.id_product, p.image, p.title, p.price, p.sale, p.link FROM product p 
           LEFT JOIN categories c ON c.id_categories = p.id_categories
           LEFT JOIN categories pc ON pc.id_categories = c.id_parent_categories
           WHERE sale != 0

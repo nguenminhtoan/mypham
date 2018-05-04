@@ -30,14 +30,16 @@ class Categories
   
   def self.getlist(db)
     sql = <<-SQL
-      SELECT #{Fields.map{|c| 'c.' << c.to_s}.join(', ')}, cs.link as parent
+      SELECT #{Fields.map{|c| 'c.' << c.to_s}.join(', ')}
       FROM categories c
       LEFT JOIN categories cs ON cs.id_categories = c.id_parent_categories
       GROUP BY c.id_categories
       ORDER BY sort_order ASC
     SQL
-    v=[]
-    db.query(sql).each{|row| v << row}
+    
+    v = []
+    res = db.exec_params(sql)
+    res.each{|row| v << row } if res.count > 0
     v
     
   end

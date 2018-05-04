@@ -87,6 +87,7 @@ GEM
     nokogiri (1.8.2-x86-mingw32)
       mini_portile2 (~> 2.3.0)
     pdf-core (0.7.0)
+    pg (0.21.0-x86-mingw32)
     prawn (2.2.2)
       pdf-core (~> 0.7.0)
       ttfunk (~> 1.5)
@@ -182,6 +183,7 @@ DEPENDENCIES
   coffee-rails (~> 4.2)
   jbuilder (~> 2.5)
   mysql2 (>= 0.3.18, < 0.5)
+  pg
   prawn
   prawn-table
   puma (~> 3.7)

@@ -16,10 +16,10 @@ module MyPhamOnline
     # -- all .rb files in that directory are automatically loaded.
     
     
-    config.db_host = "localhost"
-    config.db_user = "root"
-    config.db_pass = "sa2018"
-    config.db_schema = "shoponline"
+    config.db_host = "ec2-107-21-103-146.compute-1.amazonaws.com"
+    config.db_user = "auszbnehasmxfn"
+    config.db_pass = "5ffd8f8225cf71d02c3dad0e9999e249fe4548d286c2fe1837a11909e3098ebf"
+    config.db_schema = "d5ei310sp8to6d"
     
     
     
