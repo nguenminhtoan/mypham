@@ -22,7 +22,7 @@ class ApplicationController < ActionController::Base
     end
     
     begin
-      @db = Mysql2::Client.new(:host => DB_ADDRESS, :username => DB_ACCOUNT, :password=>DB_PASS, :database=>DB_SCHEMA, :port=> 3307)
+      @db = Mysql2::Client.new(:host => DB_ADDRESS, :username => DB_ACCOUNT, :password=>DB_PASS, :database=>DB_SCHEMA, :port=> 5432)
       #@db.select_db('shop_online_admin')
     rescue
       @db.close
